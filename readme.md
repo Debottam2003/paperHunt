@@ -4,8 +4,8 @@
 # Reports will be generated based on the acceptance of the paper
 
 # Tach stack (PERN Stack)
----Frontend---
-React js
-vanila css
----Backend---
-nodejs, express js, Postgreysql
+# ---Frontend---
+# React js
+# vanila css
+# ---Backend---
+# nodejs, express js, Postgreysql
