@@ -2,6 +2,7 @@
 create table authors (
     id serial,
     email varchar(50) PRIMARY KEY,
+    password varchar(30) not null,
     firstname varchar(30),
     lastname varchar(30)
 );
@@ -9,6 +10,7 @@ create table authors (
 create table reviewers (
     id serial,
     email varchar(50) PRIMARY KEY,
+    password varchar(30) not null,
     firstname varchar(30),
     lastname varchar(30),
     phonenumber int,
@@ -48,3 +50,8 @@ create table papers (
     filename varchar(50),
     Foreign Key (contact_author) REFERENCES authors (email) ON DELETE CASCADE on update cascade
 );
+
+insert into authors 
+(email,password,firstname,lastname)
+values 
+('author1@gmail.com','abcd123','debottam','kar');
