@@ -90,7 +90,19 @@
 --         paper_id → papers(paper_id)
 --         (Both with ON DELETE CASCADE ON UPDATE CASCADE)
 
+-- 9. admins
+--    id, email, password, firstname, lastname
+
 --Table Creation--
+
+create table admins (
+    id serial,
+    email varchar(50) PRIMARY KEY,
+    password varchar(30) not null,
+    firstname varchar(30),
+    lastname varchar(30)
+);
+
 create table authors (
     id serial,
     email varchar(50) PRIMARY KEY,
@@ -148,7 +160,6 @@ create table papers (
 create table papers_authors (
     author_email varchar(50),
     paper_id int,
-    Foreign Key (author_email) REFERENCES authors(email) ON DELETE CASCADE on update cascade,
     Foreign Key (paper_id) REFERENCES papers(paper_id) ON DELETE CASCADE on update cascade
 );
 
@@ -160,6 +171,11 @@ create table papers_assigned (
 );
 
 --Data insertion in tables--
+
+insert into admins 
+(email, password, firstname, lastname)
+values 
+('debottamkar2003@gmail.com','okudera2003','Rupan','Kar');
 
 insert into authors 
 (email,password,firstname,lastname)
@@ -200,6 +216,12 @@ INSERT INTO papers (contact_author, name, title, abstract, filename) VALUES
 ('author4@gmail.com', 'blockchain', 'intro to blockchain', 'An overview of blockchain technology and its potential applications.', 'blockchain.txt'),
 ('author4@gmail.com', 'smart contracts', 'ethereum explained', 'Explaining smart contracts on the Ethereum platform with real-world examples.', 'smartcontracts.txt');
 
+insert into papers_authors(paper_id, author_email) 
+values
+(1, 'deb123@gmail.com'),
+(1, 'sri@gmail.com'),
+(2, 'author5@gmail.com');
+
 insert into papers_assigned(reviewer_email, paper_id)
 values
 ('alice.smith@example.com', 1),
@@ -222,18 +244,66 @@ VALUES
 ('nina.brown@example.com', 4, 4, 'so lively writing', 'want more papers like this one');
 
 --Select queries for testing--
+-- Review report of the current papers that are given for reviewing
 select 
-reviews.reviewer_email as reviewer, reviews.paper_id as paper_id,
-reviews.feedback as feedback, reviews.comment as comment, rattings.ratting_id as ratting_id,
-rattings.technical_merit as technical_mertit, rattings.readability as readability,
-rattings.originality as originality, rattings.relevance as relevance
+reviews.reviewer_email as reviewer, 
+reviews.paper_id as paper_id,
+reviews.feedback as feedback, 
+reviews.comment as comment, 
+rattings.ratting_id as ratting_id,
+rattings.technical_merit as technical_mertit, 
+rattings.readability as readability,
+rattings.originality as originality, 
+rattings.relevance as relevance
 from reviews INNER JOIN rattings 
 on reviews.paper_id = rattings.paper_id;
 
-select * from rattings where paper_id = 4;
+-- All the rettings of the paper_id 4
+select * 
+from rattings 
+where paper_id = 4;
 
-select firstname, lastname from authors where email = (select contact_author from papers where paper_id = 4);
+-- All data about the contact author of the 
+select firstname, lastname 
+from authors 
+where email = (
+    select contact_author 
+    from papers 
+    where paper_id = 4
+    );
 
-select * from interest where reviewer_email in (select reviewer_email from reviews where paper_id = 4);
+-- Interest in topic of the paper_id 4's reviewer
+select * 
+from interest 
+where reviewer_email in 
+(select reviewer_email 
+from reviews 
+where paper_id = 4
+);
 
-select * from papers_assigned where paper_id = 4;
+-- Reviewers who have the paper_id 4 for reviewing
+select * from 
+papers_assigned 
+where paper_id = 4;
+
+-- All admins
+select * from admins;
+
+-- All the papers that are gievn to the reviewers
+select * from papers_assigned;
+
+-- Such reviewers who haven't get any papers for reviewing 
+select * 
+from reviewers 
+where email not in(
+    select reviewer_email 
+    from papers_assigned
+);
+
+-- Such Authors who have not submit any papers
+select * 
+from authors 
+where email not in (
+    select contact_author 
+    from papers
+);
