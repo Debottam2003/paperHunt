@@ -78,6 +78,18 @@
 --         paper_id → papers(paper_id)
 --         (Both with ON DELETE CASCADE ON UPDATE CASCADE)
 
+-- 8. papers_authors
+
+--     Attributes:
+--     paper_id, author_email
+
+--     Foreign Keys:
+
+--         author_email → authors(email)
+
+--         paper_id → papers(paper_id)
+--         (Both with ON DELETE CASCADE ON UPDATE CASCADE)
+
 --Table Creation--
 create table authors (
     id serial,
@@ -131,6 +143,13 @@ create table papers (
     abstract text,
     filename varchar(50),
     Foreign Key (contact_author) REFERENCES authors (email) ON DELETE CASCADE on update cascade
+);
+
+create table papers_authors (
+    author_email varchar(50),
+    paper_id int,
+    Foreign Key (author_email) REFERENCES authors(email) ON DELETE CASCADE on update cascade,
+    Foreign Key (paper_id) REFERENCES papers(paper_id) ON DELETE CASCADE on update cascade
 );
 
 create table papers_assigned (
