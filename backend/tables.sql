@@ -227,7 +227,8 @@ values
 ('alice.smith@example.com', 1),
 ('john.doe@example.com', 2),
 ('rahul.kumar@example.com', 3),
-('nina.brown@example.com', 4);
+('nina.brown@example.com', 4),
+('jake.white@example.com', 1);
 
 insert into rattings(reviewer_email, paper_id, technical_merit, readability, originality, relevance)
 VALUES
@@ -259,9 +260,7 @@ from reviews INNER JOIN rattings
 on reviews.paper_id = rattings.paper_id;
 
 -- All the rettings of the paper_id 4
-select * 
-from rattings 
-where paper_id = 4;
+select * from rattings where paper_id = 4;
 
 -- All data about the contact author of the 
 select firstname, lastname 
@@ -282,9 +281,7 @@ where paper_id = 4
 );
 
 -- Reviewers who have the paper_id 4 for reviewing
-select * from 
-papers_assigned 
-where paper_id = 4;
+select * from papers_assigned where paper_id = 4;
 
 -- All admins
 select * from admins;
@@ -307,3 +304,31 @@ where email not in (
     select contact_author 
     from papers
 );
+
+-- Such reviewers who have not given any reviews but have papers assigened
+select email 
+from reviewers
+where email not in (
+    select reviewer_email
+    from reviews
+) 
+except
+(select email
+from reviewers 
+where email not in(
+    select reviewer_email 
+    from papers_assigned
+));
+
+-- Total ratting of the papers
+select paper_id, (technical_merit + readability + originality + relevance) as Total_Ratting
+from rattings ORDER BY Total_Ratting;
+
+-- Total no of authors registered in paperHunt
+select count(email) as Total_no_of_authors from authors;
+
+-- Total no of reviewers registered in paperHunt    
+select count(email) as Total_no_of_reviewers from reviewers;
+
+-- Total no of papers submitted in paperHunt
+select count(paper_id) as Total_no_of_papers from papers;
