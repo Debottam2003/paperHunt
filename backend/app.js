@@ -160,6 +160,69 @@ app.post('/api/reviewerReviewSubmit', (req, res) => {
     });
 });
 
+app.get('/api/papers', async (req, res) => {
+    try {
+        let data = await pool.query('select * from papers');
+        console.log(data.rows);
+        res.json({
+            message: data.rows
+        });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Error in getting papers'
+        });
+    }
+});
+
+app.post('/api/reviewerReviewSubmit', (req, res) => {
+    res.json({
+        message: 'Welcome to the reviewer page!'
+    });
+});
+
+app.get('/api/reviews/:paper_id', async (req, res) => {
+    let paper_id = req.params.paper_id;
+    if (!paper_id) {
+        return res.status(400).json({
+            message: 'Please provide paper id'
+        });
+    }
+    try {
+        let data = await pool.query(`select 
+        reviews.reviewer_email as reviewer, 
+        reviews.paper_id as paper_id,
+        reviews.feedback as feedback, 
+        reviews.comment as comment, 
+        rattings.ratting_id as ratting_id,
+        rattings.technical_merit as technical_mertit, 
+        rattings.readability as readability,
+        rattings.originality as originality, 
+        rattings.relevance as relevance
+        from reviews INNER JOIN rattings 
+        on reviews.paper_id = rattings.paper_id
+        where reviews.paper_id = $1`, [paper_id]);
+        console.log(data.rows);
+        if (data.rows.length === 0) {
+            return res.json({
+                message: 'No reviews yet!'
+            });
+        }
+        else {
+            res.json({
+                message: data.rows
+            });
+        }
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Error in getting reviews'
+        });
+    }
+});
+
 async function dbconnection() {
     try {
         const client = await pool.connect();

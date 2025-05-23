@@ -332,3 +332,8 @@ select count(email) as Total_no_of_reviewers from reviewers;
 
 -- Total no of papers submitted in paperHunt
 select count(paper_id) as Total_no_of_papers from papers;
+
+-- Total no of papers assigned to reviewers
+select count(paper_id) as Total_no_of_papers_assigned from papers_assigned;
+
+
