@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel = 'icon' href="./images/logo.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,700&display=swap">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', Arial, sans-serif;
+            background: linear-gradient(135deg, #e3f0ff 0%, #f9fafb 100%);
+            min-height: 100vh;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+        }
+        .title {
+            font-size: 3rem;
+            color: #2d3748;
+            margin-bottom: 0.5em;
+            font-weight: 700;
+        }
+        .title span {
+            color: #3182ce;
+        }
+        .subtitle {
+            font-size: 1.25rem;
+            color: #4a5568;
+            max-width: 500px;
+            text-align: center;
+            margin-bottom: 2em;
+            line-height: 1.6;
+        }
+        .cta-btn {
+            padding: 0.75em 2em;
+            background: #3182ce;
+            color: #fff;
+            border-radius: 0.5em;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(49,130,206,0.08);
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .cta-btn:hover {
+            background: #2563eb;
+            box-shadow: 0 4px 16px rgba(49,130,206,0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Welcome to <span>paperHunt</span></h1>
+        <p class="subtitle">
+            Discover, search, and organize academic papers with ease. Your gateway to smarter research starts here.
+        </p>
+        <a href="./login.html" class="cta-btn">
+            Get Started
+        </a>
+    </div>
+</body>
+</html>
