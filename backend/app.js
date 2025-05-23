@@ -176,12 +176,6 @@ app.get('/api/papers', async (req, res) => {
     }
 });
 
-app.post('/api/reviewerReviewSubmit', (req, res) => {
-    res.json({
-        message: 'Welcome to the reviewer page!'
-    });
-});
-
 app.get('/api/reviews/:paper_id', async (req, res) => {
     let paper_id = req.params.paper_id;
     if (!paper_id) {
