@@ -52,8 +52,8 @@ app.post('/api/authorRegister', express.json(), async (req, res) => {
 });
 
 app.post("/api/reviewerRegister", express.json(), async (req, res) => {
-    let { email, password, firstname, lastname, phonenumber, affiliation } = req.body;
-    if (!email || !password || !firstname || !lastname || !phonenumber || !affiliation) {
+    let { email, password, firstname, lastname, phonenumber, affiliation, interest1, interest2 } = req.body;
+    if (!email || !password || !firstname || !lastname || !phonenumber || !affiliation || !interest1 || !interest2) {
         return res.status(400).json({
             message: 'Please provide all the fields'
         });
@@ -67,6 +67,12 @@ app.post("/api/reviewerRegister", express.json(), async (req, res) => {
         }
         let data = await pool.query('insert into reviewers(email, password, firstname, lastname, phonenumber, affiliation) values($1, $2, $3, $4, $5, $6) returning email', [email, password, firstname, lastname, phonenumber, affiliation]);
         console.log(data.rows);
+        let interests = [interest1, interest2];
+        for (let interest of interests) {
+            if (interest) {
+                await pool.query('insert into interest(reviewer_email, topic) values($1, $2)', [email, interest]);
+            }
+        }
         res.json({
             message: 'Welcome to the paperHunt!',
             email: data.rows[0].email
@@ -154,10 +160,31 @@ app.post('/api/authorPaperSubmit', (req, res) => {
     });
 });
 
-app.post('/api/reviewerReviewSubmit', (req, res) => {
-    res.json({
-        message: 'Welcome to the reviewer page!'
-    });
+app.post('/api/reviewerReviewSubmit', express.json(), async (req, res) => {
+    console.log(req.body);
+    let { paper_id, reviewer_email, feedback, comment, technical_merit, readability, originality, relevance } = req.body;
+    if (!paper_id || !reviewer_email || !feedback || !comment || !technical_merit || !readability || !originality || !relevance) {
+        return res.status(400).json({
+            message: 'Please provide all the fields'
+        });
+    }
+    try {
+        // Insert ratting data into the rattings table
+        let rattingData = await pool.query('insert into rattings(paper_id, reviewer_email, technical_merit, readability, originality, relevance) values($1, $2, $3, $4, $5, $6) returning ratting_id', [paper_id, reviewer_email, technical_merit, readability, originality, relevance]);
+        console.log(rattingData.rows[0].ratting_id);
+        // Insert review data into the reviews table
+        let reviewData = await pool.query('insert into reviews(paper_id, reviewer_email, feedback, comment, ratting_id) values($1, $2, $3, $4, $5) returning *', [paper_id, reviewer_email, feedback, comment, rattingData.rows[0].ratting_id]);
+        console.log(reviewData.rows);
+        res.json({
+            message: 'Thank you for your review submission!',
+        });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Error in Reviewer Review Submission'
+        });
+    }
 });
 
 app.get('/api/papers', async (req, res) => {
@@ -195,7 +222,7 @@ app.get('/api/reviews/:paper_id', async (req, res) => {
         rattings.originality as originality, 
         rattings.relevance as relevance
         from reviews INNER JOIN rattings 
-        on reviews.paper_id = rattings.paper_id
+        on reviews.ratting_id = rattings.ratting_id
         where reviews.paper_id = $1`, [paper_id]);
         console.log(data.rows);
         if (data.rows.length === 0) {

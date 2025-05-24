@@ -257,7 +257,7 @@ rattings.readability as readability,
 rattings.originality as originality, 
 rattings.relevance as relevance
 from reviews INNER JOIN rattings 
-on reviews.paper_id = rattings.paper_id;
+on reviews.ratting_id = rattings.ratting_id;
 
 -- All the rettings of the paper_id 4
 select * from rattings where paper_id = 4;
