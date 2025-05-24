@@ -48,10 +48,21 @@
             font-weight: 600;
             box-shadow: 0 2px 8px rgba(49,130,206,0.08);
             transition: background 0.2s, box-shadow 0.2s;
+            animation: bottom_up 2s ease-in-out 0.2s 1;
         }
         .cta-btn:hover {
             background: #2563eb;
             box-shadow: 0 4px 16px rgba(49,130,206,0.15);
+        }
+        @keyframes bottom_up {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -61,7 +72,7 @@
         <p class="subtitle">
             Discover, search, and organize academic papers with ease. Your gateway to smarter research starts here.
         </p>
-        <a href="./login.html" class="cta-btn">
+        <a href="./enter.html" class="cta-btn">
             Get Started
         </a>
     </div>
