@@ -253,8 +253,8 @@ async function dbconnection() {
             console.log(`http://localhost: ${process.env.PORT}`);
         });
         client.release();
-        let { rows } = await pool.query('select * from movies limit 1');
-        console.log(rows);
+        // let { rows } = await pool.query('select * from movies limit 1');
+        // console.log(rows);
     } catch (err) {
         console.error('Error connecting to the database', err);
     }

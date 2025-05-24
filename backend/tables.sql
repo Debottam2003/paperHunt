@@ -182,7 +182,7 @@ insert into authors
 values 
 ('author1@gmail.com','abcd123','debottam','kar'),
 ('author2@gmail.com','goutam','soma','kar'),
-('author3@gmail.com','debangsu1998','sritama','karsaha')
+('author3@gmail.com','debangsu1998','sritama','karsaha'),
 ('author4@gmail.com','soma','goutam','kar');
 
 INSERT INTO reviewers (email, password, firstname, lastname, phonenumber, affiliation)
@@ -198,7 +198,7 @@ VALUES
 ('nina.brown@example.com', 'nina1234', 'Nina', 'Brown', 4040404040, 'Independent'),
 ('jake.white@example.com', 'jakepw22', 'Jake', 'White', 5050505050, 'Independent');
 
-insert into interest(email, topic) 
+insert into interest(reviewer_email, topic) 
 values
 ('alice.smith@example.com', 'arts'),
 ('john.doe@example.com', 'cs'),
