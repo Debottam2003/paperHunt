@@ -7,7 +7,11 @@ import { fileURLToPath } from 'url';
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:4000',
+    method: 'GET, POST, PUT, DELETE, OPTIONS',
+}));
+
 const __filename = fileURLToPath(import.meta.url);
 // console.log(import.meta);
 console.log(__filename);
@@ -17,10 +21,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'home.html'));
-});
 
 app.post('/api/authorRegister', express.json(), async (req, res) => {
     const { email, password, firstname, lastname } = req.body;
@@ -240,6 +240,60 @@ app.get('/api/reviews/:paper_id', async (req, res) => {
         console.log(err);
         res.status(500).json({
             message: 'Error in getting reviews'
+        });
+    }
+});
+
+app.get('/api/authors/:email', async (req, res) => {
+    console.log(req.params.email);
+    if(!req.params.email) {
+        return res.status(400).json({
+            message: 'Please provide email'
+        });
+    }
+    try {
+        let data = await pool.query('select firstname, lastname, email from authors where email = $1', [req.params.email]);
+        if (data.rows.length === 0) {
+            return res.status(404).json({
+                message: 'Author not found'
+            });
+        }
+        console.log(data.rows[0]);
+        res.json({
+            message: data.rows[0]
+        });
+    }
+    catch(err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Error in getting author details'
+        });
+    }
+});
+
+app.get('/api/reviewers/:email', async (req, res) => {
+    console.log(req.params.email);
+    if(!req.params.email) {
+        return res.status(400).json({
+            message: 'Please provide email'
+        });
+    }
+    try {
+        let data = await pool.query('select firstname, lastname, email, phonenumber, affiliation from reviewers where email = $1', [req.params.email]);
+        if (data.rows.length === 0) {
+            return res.status(404).json({
+                message: 'Reviewer not found'
+            });
+        }
+        console.log(data.rows[0]);
+        res.json({
+            message: data.rows[0]
+        });
+    }
+    catch(err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Error in getting reviewer details'
         });
     }
 });

@@ -1,11 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reviewer</title>
+  </head>
+  <body>
+    <style>
+      #icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: rgb(53, 127, 231);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.533);
+        margin: 1rem;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #icon:hover {
+        cursor: pointer;
+      }
+      h3 {
+        display: inline;
+      }
+      #reviewer-data {
+        font-family: Arial, sans-serif;
+        font-size: 1rem;
+        margin: 1rem;
+        display: none;
+        flex-direction: column;
+        justify-content: space-around;
+        gap: 2rem;
+        width: 250px;
+        background-color: rgb(230, 241, 250);
+        padding: 1rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.533);
+        border-radius: 5px;
+      }
+    </style>
+    <div id="icon"></div>
+    <div id="reviewer-data"></div>
+    <script>
+      let reviewerDataDiv = document.getElementById("reviewer-data");
+      let btn = document.getElementById("icon");
+      async function fetchReviewerData() {
+        let response = await fetch(
+          `http://localhost:5000/api/reviewers/deb@gmail.com`
+        );
+        if (!response.ok) {
+          console.error("Failed to fetch author data:", response.statusText);
+          return;
+        }
+        let data = await response.json();
+        console.log(data);
+        reviewerDataDiv.innerHTML = `
+                <div><h3>Name:</h3> ${data.message.firstname} ${data.message.lastname}</div>
+                <div><h3>Email:</h3> ${data.message.email}</div>
+                <div><h3>Affiliation:</h3> ${data.message.affiliation}</div>
+                <div><h3>Phone:</h3> ${data.message.phonenumber}</div>
+            `;
+        document.getElementById("icon").innerHTML = `<h1>${data.message.firstname[0].toUpperCase()}</h1>`;
+      }
+      fetchReviewerData();
+      let show = false;
+      btn.addEventListener("click", () => {
+        if (show === false) {
+          reviewerDataDiv.style.display = "flex";
+          show = true;
+        } else {
+          reviewerDataDiv.style.display = "none";
+          show = false;
+        }
+      });
+    </script>
+  </body>
 </html>
