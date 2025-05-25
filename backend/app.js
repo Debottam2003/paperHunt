@@ -217,7 +217,7 @@ app.get('/api/reviews/:paper_id', async (req, res) => {
         reviews.feedback as feedback, 
         reviews.comment as comment, 
         rattings.ratting_id as ratting_id,
-        rattings.technical_merit as technical_mertit, 
+        rattings.technical_merit as technical_merit, 
         rattings.readability as readability,
         rattings.originality as originality, 
         rattings.relevance as relevance
@@ -294,6 +294,22 @@ app.get('/api/reviewers/:email', async (req, res) => {
         console.log(err);
         res.status(500).json({
             message: 'Error in getting reviewer details'
+        });
+    }
+});
+
+app.get('/api/papers', async (req, res) => {
+    try {
+        let data = await pool.query('select * from papers');
+        console.log(data.rows);
+        res.json({
+            message: data.rows
+    });
+    }
+    catch(err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Error in getting papers'
         });
     }
 });

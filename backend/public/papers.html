@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./images/logo.png" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Inter:400,700&display=swap"
+    />
+    <title>Papers</title>
+  </head>
+  <body>
+    <style>
+      #papers-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+      }
+      .papers {
+        padding: 1rem;
+        margin: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 1000px;
+        background-color: aliceblue;
+      }
+      a {
+        text-decoration: none;
+      }
+      .cta-btn,
+      .bta-btn {
+        padding: 0.75em 2em;
+        margin: 1rem;
+        background: #3182ce;
+        color: #fff;
+        border-radius: 0.5em;
+        text-decoration: none;
+        font-size: 1.1rem;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.67);
+        transition: background 0.2s, box-shadow 0.2s;
+        border: none;
+      }
+      .cta-btn:hover {
+        background: #033297;
+        box-shadow: 0 4px 16px rgba(49, 130, 206, 0.15);
+      }
+      .bta-btn:hover {
+        background-color: rgb(6, 125, 6);
+        box-shadow: 0 4px 16px rgba(49, 130, 206, 0.15);
+      }
+      .bta-btn {
+        background-color: rgb(9, 149, 9);
+      }
+    .review {
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0;
+      border: 2px solid #3182ce;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #e3f0ff 0%, #f9f9f9 100%);
+      width: 92%;
+      max-width: 850px;
+      box-shadow: 0 4px 18px rgba(49, 130, 206, 0.12);
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 1.08rem;
+      color: #1a202c;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .review:hover {
+      box-shadow: 0 8px 32px rgba(49, 130, 206, 0.22);
+      border-color: #033297;
+      background: linear-gradient(90deg, #dbeafe 0%, #f0f4f8 100%);
+    }
+    .review b {
+      color: #2563eb;
+    }
+    </style>
+    <header>
+      <h1>Research Papers</h1>
+      <p>Explore the latest research papers in various fields.</p>
+    </header>
+    <div id="papers-list"></div>
+    <script>
+      // Function to fetch and display papers
+      async function fetchPapers() {
+        try {
+          // Setting the papers to public
+          const response = await fetch("/api/papers");
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const papers = await response.json();
+          console.log(papers);
+          const papersList = document.getElementById("papers-list");
+          papers.message.forEach((paper) => {
+            const listItem = document.createElement("div");
+
+            const title = document.createElement("h2");
+            title.innerHTML = paper.title.toUpperCase();
+
+            const contactAuthor = document.createElement("p");
+            contactAuthor.innerHTML = `<B>Author:</B> ${paper.contact_author}`;
+
+            const abstract = document.createElement("p");
+            abstract.innerHTML = `<B>Abstarct:</B> ${paper.abstract}`;
+
+            const downloadLink = document.createElement("a");
+            downloadLink.href = `./papers/${paper.filename}`;
+            downloadLink.setAttribute("download", paper.filename);
+            const downloadButton = document.createElement("button");
+            downloadButton.innerHTML = "Download Paper";
+            downloadButton.classList.add("cta-btn");
+            downloadLink.appendChild(downloadButton);
+
+            let reviewLink = document.createElement("button");
+            reviewLink.innerHTML = "See Reviews";
+            reviewLink.classList.add("bta-btn");
+            reviewLink.id = paper.paper_id;
+
+            listItem.appendChild(title);
+            listItem.appendChild(contactAuthor);
+            listItem.appendChild(abstract);
+            listItem.appendChild(downloadLink);
+            listItem.appendChild(reviewLink);
+
+            listItem.classList.add("papers");
+
+            papersList.appendChild(listItem);
+          });
+          // Getting the reviews for the papers
+          let reviewButtons = document.querySelectorAll(".bta-btn");
+          reviewButtons.forEach((rb) => {
+            rb.addEventListener("click", async (event) => {
+              let paper_id = event.target.id;
+              try {
+                let response = await fetch(
+                  `http://localhost:5000/api/reviews/${paper_id}`
+                );
+                if (!response.ok) {
+                  console.log("No Response");
+                } else {
+                  let data = await response.json();
+                  console.log(data.message);
+
+                  event.target.style.display = "none";
+
+                  data.message.forEach((review) => {
+
+                    // Create a new div for each review
+                    let reviewDiv = document.createElement("div");
+                    reviewDiv.classList.add("review");
+                    reviewDiv.innerHTML = `<b>Reviewer:</b> ${review.reviewer} <br> <br>
+                    <b>Feedback:</b> ${review.feedback} <br> <br>
+                    <b>Ratting</b> <br> <br>
+                    <b>Technical Merit:</b> ${review.technical_merit} <br> <br>
+                    <b>Originality:</b> ${review.originality} <br> <br>
+                    <b>Readability:</b> ${review.readability} <br> <br>
+                    <b>Relevance:</b> ${review.relevance}`;
+
+                    event.target.parentNode.appendChild(reviewDiv);
+                  });
+                }
+              } catch (err) {
+                console.log(err);
+              }
+            });
+          });
+        } catch (error) {
+          console.error("Error fetching papers:", error);
+        }
+      }
+      // Call the function to fetch and display papers
+      fetchPapers();
+    </script>
+  </body>
+</html>
