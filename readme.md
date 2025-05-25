@@ -5,7 +5,8 @@
 
 # Tach stack (PERN Stack)
 # ---Frontend---
-# React js
+# html
 # vanila css
+# vanila js
 # ---Backend---
 # nodejs, express js, Postgreysql
