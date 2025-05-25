@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 app.use(cors({
     origin: 'http://localhost:4000',
-    method: 'GET, POST, PUT, DELETE, OPTIONS',
+    method: 'GET, POST, PUT, DELETE, PATCH',
 }));
 
 const __filename = fileURLToPath(import.meta.url);
