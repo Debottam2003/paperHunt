@@ -92,7 +92,7 @@
       async function fetchPapers() {
         try {
           // Setting the papers to public
-          const response = await fetch("/api/papers");
+          const response = await fetch("http://localhost:5000/api/papers");
           if (!response.ok) {
             throw new Error("Network response was not ok");
           }

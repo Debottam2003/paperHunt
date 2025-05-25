@@ -22,6 +22,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'home.html'));
+});
+
 app.post('/api/authorRegister', express.json(), async (req, res) => {
     const { email, password, firstname, lastname } = req.body;
     if (!email || !password || !firstname || !lastname) {
@@ -310,6 +314,33 @@ app.get('/api/papers', async (req, res) => {
         console.log(err);
         res.status(500).json({
             message: 'Error in getting papers'
+        });
+    }
+});
+
+app.get('/api/authorsPapers/:email', async (req, res) => {
+    let email = req.params.email;
+    if (!email) {
+        return res.status(400).json({
+            message: 'Please provide email'
+        });
+    }
+    try {
+        let data = await pool.query('select * from papers where contact_author = $1', [email]);
+        if (data.rows.length === 0) {
+            return res.status(201).json({
+                message: 'You have not submitted any papers yet!'
+            });
+        }
+        console.log(data.rows);
+        res.status(200).json({
+            message: data.rows
+        });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Error in getting author papers'
         });
     }
 });
