@@ -49,7 +49,7 @@
         justify-content: space-around;
         gap: 2rem;
         width: 250px;
-        background-color: rgb(230, 241, 250);
+        background-color: rgb(255, 255, 255);
         padding: 1rem;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.533);
         border-radius: 5px;
@@ -120,6 +120,21 @@
       cursor: pointer;
       background-color: rgb(39, 114, 218);
     }
+
+    #log-out {
+      color: white;
+      border: none;
+      padding: 0.5rem;
+      background-color: rgba(200, 5, 5, 0.766);
+      font-size: bolder;
+      font-size: 1rem;
+      border-radius: 5px;
+    }
+
+    #log-out {
+      cursor: pointer;
+    }
+
     </style>
     <div>
       <div id="icon"></div>
@@ -131,11 +146,19 @@
     <div id="new-paper">Submit New Paper</div>
     <div id="explore-papers">Explore Other's Papers</div>
     <script>
+
+      let email = localStorage.getItem("authorEmail");
+      if (!email) {
+        console.error("No author email found in localStorage.");
+        // Optionally redirect to login or show an error message
+        window.location.href = './home.html';
+      }
+
       let authorDataDiv = document.getElementById("author-data");
       let btn = document.getElementById("icon");
       async function fetchAuthorData() {
         let response = await fetch(
-          `http://localhost:5000/api/authors/author1@gmail.com`
+          `http://localhost:5000/api/authors/${email}`
         );
         if (!response.ok) {
           console.error("Failed to fetch author data:", response.statusText);
@@ -146,10 +169,22 @@
         authorDataDiv.innerHTML = `
                 <div><h3>Name:</h3> ${data.message.firstname} ${data.message.lastname}</div>
                 <div><h3>Email:</h3> ${data.message.email}</div>
+                <button id="log-out">LogOut</button>
             `;
         document.getElementById(
           "icon"
         ).innerHTML = `<h1>${data.message.firstname[0].toUpperCase()}</h1>`;
+        
+        // Log Out
+      let logout = document.getElementById("log-out");
+      logout.addEventListener('click', () => {
+        let sure = confirm("Are You Sure");
+        if(sure) {
+          localStorage.removeItem('authorEmail');
+          window.location.href = "./home.html";
+        }
+      });
+
       }
       fetchAuthorData();
       let show = false;
@@ -167,7 +202,7 @@
 
       async function papers() {
         let response = await fetch(
-          `http://localhost:5000/api/authorsPapers/author1@gmail.com`
+          `http://localhost:5000/api/authorsPapers/${email}`
         );
         if (!response.ok) {
           console.log("Falied to fetch author papers:", response.statusText);

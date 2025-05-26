@@ -10,7 +10,7 @@
     body {
         background: #f0f2f5;
         font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #e3f0ff 0%, #f9fafb 100%);
+background: linear-gradient(135deg, #c2d6ec 0%, #ffffff 100%);
     }
     .login-container {
         width: 100vw;
@@ -84,8 +84,39 @@
             <input type="password" id="password" name="password" required>
 
             <button type="submit">Register</button>
-            <a href="./autorLogin.html" id="login-btn"><h5>Already Have account?</h5><h3>Login</h3></a>
+            <a href="./authorLogin.html" id="login-btn"><h5>Already Have account?</h5><h3>Login</h3></a>
         </form>
     </div>
+    <script>
+        let form = document.querySelector(".login-form");
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            let email = document.getElementById("email").value;
+            let firstname = document.getElementById("firstname").value;
+            let lastname = document.getElementById("lastname").value;
+            let password = document.getElementById("password").value;
+            console.log(email, firstname, lastname);
+
+            let response = await fetch("http://localhost:5000/api/authorRegister", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({email, password, firstname, lastname})
+            });
+            let data = await response.json();
+            console.log(data);
+            if(!response.ok) {
+                console.log(data.message);
+                alert(data.message);
+            }
+            else{
+                alert(data.message);
+                localStorage.setItem("authorEmail", email);
+                window.location.href = "./authorDashboard.html";
+            }
+
+        });
+    </script>
 </body>
 </html>

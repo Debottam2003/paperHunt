@@ -356,6 +356,10 @@ app.get('/api/reviewersPapers/:email', async (req, res) => {
     }
 });
 
+app.get('/api/checkuser/:email', async (req, res) => {
+
+});
+
 async function dbconnection() {
     try {
         const client = await pool.connect();

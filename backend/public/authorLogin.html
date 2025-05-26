@@ -10,7 +10,7 @@
     body {
         background: #f0f2f5;
         font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #e3f0ff 0%, #f9fafb 100%);
+        background: linear-gradient(135deg, #c2d6ec 0%, #ffffff 100%);
     }
     .login-container {
         width: 100vw;
@@ -81,5 +81,35 @@
             <a href="./authorRegister.html" id="register-btn"><h4>Register</h4></a>
         </form>
     </div>
+    <script>
+        document.querySelector('.login-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Perform your login logic here
+            let response = await fetch('http://localhost:5000/api/authorLogin',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+            if (!response.ok) {
+                console.error('Login failed:', response.statusText);
+                alert('Login failed. Please check your credentials.');
+                return;
+            }
+            else {
+                let data = await response.json();
+                alert(data.message);
+                localStorage.setItem('authorEmail', email);
+                window.location.href = 'authorDashboard.html';
+            }
+            // Example: Redirect to another page after login
+            // window.location.href = 'authorDashboard.html';
+        });
+    </script>
 </body>
 </html>

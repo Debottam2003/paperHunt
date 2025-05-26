@@ -10,7 +10,7 @@
     body {
         background: #f0f2f5;
         font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #e3f0ff 0%, #f9fafb 100%);
+        background: linear-gradient(135deg, #c2d6ec 0%, #ffffff 100%);
     }
     .login-container {
         width: 100vw;
@@ -81,5 +81,34 @@
             <a href="./reviewerRegister.html" id="register-btn"><h4>Register</h4></a>
         </form>
     </div>
+    <script>
+        let form = document.querySelector(".login-form");
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+            console.log(email);
+
+            let response = await fetch("http://localhost:5000/api/reviewerLogin", {
+                method: "POST",
+                headers: {
+                    'Content-type': "application/json"
+                },
+                body: JSON.stringify({email, password})
+            })
+            if(!response.ok) {
+                let data = await response.json();
+                alert("Provide Proper credentials", data.message);       
+                return;
+            }
+            else {
+                let data = await response.json();
+                alert(data.message);
+                localStorage.setItem("reviewerEmail", email);
+                window.location.href = "./reviewerDashboard.html";
+            }
+
+        });
+    </script>
 </body>
 </html>

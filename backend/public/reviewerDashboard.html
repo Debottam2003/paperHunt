@@ -13,7 +13,14 @@
         display: flex;
         gap: 2rem;
         justify-content: space-between;
-        background: linear-gradient(135deg, #e3f0ff 0%, #f9fafb 100%);
+        background: repeating-linear-gradient(
+          180deg,
+          #fff 0px,
+          #fff 32px,
+          #c8dcfa 33px,
+          #fff 34px
+        );
+        background-size: 100% 34px;
       }
       #icon {
         width: 60px;
@@ -42,15 +49,8 @@
         justify-content: space-around;
         gap: 2rem;
         width: 250px;
-        background-color: rgb(230, 241, 250);
+        background-color: rgb(255, 255, 255);
         padding: 1rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.533);
-        border-radius: 5px;
-      }
-            .paper {
-        margin: 1rem;
-        padding: 1rem;
-        background-color: rgb(230, 241, 250);
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.533);
         border-radius: 5px;
       }
@@ -87,6 +87,19 @@
       cursor: pointer;
       margin-top: 1rem;
     }
+    #log-out {
+      color: white;
+      border: none;
+      padding: 0.5rem;
+      background-color: rgba(200, 5, 5, 0.766);
+      font-size: bolder;
+      font-size: 1rem;
+      border-radius: 5px;
+    }
+
+    #log-out {
+      cursor: pointer;
+    }
     </style>
 
     <div id="profile">
@@ -99,11 +112,21 @@
     <div id="explore-papers">Explore New Papers</div>
 
     <script>
+
+      let email = localStorage.getItem("reviewerEmail");
+      if (!email) {
+        console.error("No reviewer email found in localStorage.");
+        // Optionally redirect to login or show an error message
+        window.location.href = './home.html';
+      }
+
       let reviewerDataDiv = document.getElementById("reviewer-data");
       let btn = document.getElementById("icon");
+      
+      // Fetch reviewer data
       async function fetchReviewerData() {
         let response = await fetch(
-          `http://localhost:5000/api/reviewers/deb@gmail.com`
+          `http://localhost:5000/api/reviewers/${email}`
         );
         if (!response.ok) {
           console.error("Failed to fetch author data:", response.statusText);
@@ -116,8 +139,20 @@
                 <div><h3>Email:</h3> ${data.message.email}</div>
                 <div><h3>Affiliation:</h3> ${data.message.affiliation}</div>
                 <div><h3>Phone:</h3> ${data.message.phonenumber}</div>
+                <button id="log-out">LogOut</button>
             `;
         document.getElementById("icon").innerHTML = `<h1>${data.message.firstname[0].toUpperCase()}</h1>`;
+                
+      // Log Out
+      let logout = document.getElementById("log-out");
+      logout.addEventListener('click', () => {
+        let sure = confirm("Are You Sure");
+        if(sure) {
+          localStorage.removeItem('reviewerEmail');
+          window.location.href = "./home.html";
+        }
+      });
+
       }
       fetchReviewerData();
       let show = false;
@@ -132,7 +167,7 @@
       });
 
       async function fetchReviewerPapers() {
-        let response = await fetch(`http://localhost:5000/api/reviewersPapers/alice.smith@example.com`);
+        let response = await fetch(`http://localhost:5000/api/reviewersPapers/${email}`);
         if (!response.ok) {
           console.error("Failed to fetch reviewer papers:", response.statusText);
           return;
@@ -162,6 +197,8 @@
             let giveReviewButton = document.createElement("button");
             giveReviewButton.innerText = "Give Review";
             giveReviewButton.classList.add("give-review-button");
+            giveReviewButton.id = paper.paper_id;
+
             paperDiv.appendChild(giveReviewButton);
 
             paperDiv.classList.add("paper");
