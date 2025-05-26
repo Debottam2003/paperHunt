@@ -230,6 +230,10 @@ values
 ('nina.brown@example.com', 4),
 ('jake.white@example.com', 1);
 
+insert into papers_assigned(reviewer_email, paper_id)
+values
+('alice.smith@example.com', 3);
+
 insert into rattings(reviewer_email, paper_id, technical_merit, readability, originality, relevance)
 VALUES
 ('alice.smith@example.com', 1, 3.5, 4.2, 4, 4),

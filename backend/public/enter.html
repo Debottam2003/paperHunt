@@ -50,6 +50,13 @@
     </div>
   </body>
   <script>
-
+    let authorEmail = localStorage.getItem("authorEmail");
+    let reviewerEmail = localStorage.getItem("reviewerEmail");
+    if(authorEmail) {
+      window.location.href = "./authorDashboard.html";
+    }
+    else if(reviewerEmail) {
+      window.location.href = "./reviewerDashboard.html";
+    }
   </script>
 </html>
