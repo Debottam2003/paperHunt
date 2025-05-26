@@ -191,22 +191,6 @@ app.post('/api/reviewerReviewSubmit', express.json(), async (req, res) => {
     }
 });
 
-app.get('/api/papers', async (req, res) => {
-    try {
-        let data = await pool.query('select * from papers');
-        console.log(data.rows);
-        res.json({
-            message: data.rows
-        });
-    }
-    catch (err) {
-        console.log(err);
-        res.status(500).json({
-            message: 'Error in getting papers'
-        });
-    }
-});
-
 app.get('/api/reviews/:paper_id', async (req, res) => {
     let paper_id = req.params.paper_id;
     if (!paper_id) {
@@ -341,6 +325,33 @@ app.get('/api/authorsPapers/:email', async (req, res) => {
         console.log(err);
         res.status(500).json({
             message: 'Error in getting author papers'
+        });
+    }
+});
+
+app.get('/api/reviewersPapers/:email', async (req, res) => {
+    let email = req.params.email;
+    if (!email) {
+        return res.status(400).json({
+            message: 'Please provide email'
+        });
+    }
+    try {
+        let data = await pool.query('select papers.paper_id as paper_id, papers.title as title, papers.abstract  from papers, papers_assigned where papers.paper_id = papers_assigned.paper_id and reviewer_email = $1', [email]);
+        if (data.rows.length === 0) {
+            return res.status(201).json({
+                message: 'You have not been assigned any papers yet!'
+            });
+        }
+        console.log(data.rows);
+        res.status(200).json({
+            message: data.rows
+        });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Error in getting reviewer papers'
         });
     }
 });

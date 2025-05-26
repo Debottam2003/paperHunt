@@ -9,6 +9,12 @@
   </head>
   <body>
     <style>
+      body {
+        display: flex;
+        gap: 2rem;
+        justify-content: space-between;
+        background: linear-gradient(135deg, #e3f0ff 0%, #f9fafb 100%);
+      }
       #icon {
         width: 60px;
         height: 60px;
@@ -41,9 +47,57 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.533);
         border-radius: 5px;
       }
+            .paper {
+        margin: 1rem;
+        padding: 1rem;
+        background-color: rgb(230, 241, 250);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.533);
+        border-radius: 5px;
+      }
+      .paper {
+        margin: 1rem;
+        padding: 1rem;
+        background-color: rgb(255, 255, 255);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.533);
+        border-radius: 5px;
+      }
+      #explore-papers {
+      background-color: rgb(13, 66, 140);
+      color: white;
+      font-weight: bolder;
+      margin: 2rem;
+      height: 20px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      box-shadow: 0 8px 32px rgba(49, 130, 206, 0.22);
+    }
+    #explore-papers:hover {
+      cursor: pointer;
+      background-color: rgb(39, 114, 218);
+    }
+    .give-review-button {
+      background-color: #2ecc40;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
     </style>
+
+    <div id="profile">
     <div id="icon"></div>
     <div id="reviewer-data"></div>
+    </div>
+      <div id="reviewer-papers">
+      <h1>Your Assigned Papers</h1>
+    </div>
+    <div id="explore-papers">Explore New Papers</div>
+
     <script>
       let reviewerDataDiv = document.getElementById("reviewer-data");
       let btn = document.getElementById("icon");
@@ -76,6 +130,52 @@
           show = false;
         }
       });
+
+      async function fetchReviewerPapers() {
+        let response = await fetch(`http://localhost:5000/api/reviewersPapers/alice.smith@example.com`);
+        if (!response.ok) {
+          console.error("Failed to fetch reviewer papers:", response.statusText);
+          return;
+        }
+        if (response.status === 201) {
+          let data = await response.json();
+          if (data.message === "You have not been assigned any papers yet!") {
+          let reviewerPapersDiv = document.getElementById("reviewer-papers");
+          let msg = document.createElement("div");
+          msg.innerHTML = `<h2>${data.message}</h2>`;
+          reviewerPapersDiv.appendChild(msg);
+          return;
+        }
+        }
+        else {
+          let data = await response.json();
+
+          let reviewerPapersDiv = document.getElementById("reviewer-papers");
+
+          data.message.forEach((paper) => {
+
+            let paperDiv = document.createElement("div");
+            paperDiv.innerHTML = `
+              <h3>Title: ${paper.title.toUpperCase()}</h3>
+              <p>Abstract: ${paper.abstract}</p>
+            `;
+            let giveReviewButton = document.createElement("button");
+            giveReviewButton.innerText = "Give Review";
+            giveReviewButton.classList.add("give-review-button");
+            paperDiv.appendChild(giveReviewButton);
+
+            paperDiv.classList.add("paper");
+            reviewerPapersDiv.appendChild(paperDiv);
+
+          });
+        }
+      }
+      fetchReviewerPapers();
+
+      document.getElementById("explore-papers").addEventListener("click", () => {
+        window.open('./papers.html', "_blank");
+      });
+
     </script>
   </body>
 </html>

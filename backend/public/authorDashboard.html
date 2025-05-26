@@ -17,6 +17,7 @@
         display: flex;
         gap: 2rem;
         justify-content: space-between;
+        background: linear-gradient(135deg, #e3f0ff 0%, #f9fafb 100%);
       }
       #icon {
         width: 60px;
@@ -57,7 +58,7 @@
       .paper {
         margin: 1rem;
         padding: 1rem;
-        background-color: rgb(230, 241, 250);
+        background-color: rgb(255, 255, 255);
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.533);
         border-radius: 5px;
       }
@@ -102,7 +103,7 @@
     .review b {
       color: #2563eb;
     }
-    #new-paper {
+    #new-paper, #explore-papers {
       background-color: rgb(13, 66, 140);
       color: white;
       font-weight: bolder;
@@ -115,6 +116,10 @@
       border-radius: 10px;
       box-shadow: 0 8px 32px rgba(49, 130, 206, 0.22);
     }
+    #explore-papers:hover, #new-paper:hover {
+      cursor: pointer;
+      background-color: rgb(39, 114, 218);
+    }
     </style>
     <div>
       <div id="icon"></div>
@@ -124,6 +129,7 @@
       <h1>Your Papers</h1>
     </div>
     <div id="new-paper">Submit New Paper</div>
+    <div id="explore-papers">Explore Other's Papers</div>
     <script>
       let authorDataDiv = document.getElementById("author-data");
       let btn = document.getElementById("icon");
@@ -230,6 +236,11 @@
         }
       }
       papers();
+
+      document.getElementById("explore-papers").addEventListener("click", () => {
+        window.open('./papers.html', "_blank");
+      });
+
     </script>
   </body>
 </html>
