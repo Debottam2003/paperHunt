@@ -142,6 +142,79 @@
       cursor: pointer;
     }
 
+    #paper-form {
+      display: none;
+      flex-direction: column;
+      gap: 1.2rem;
+      padding: 2rem 2.2rem 1.5rem 2.2rem;
+      background: linear-gradient(120deg, #e3f0ff 0%, #f9f9f9 100%);
+      box-shadow: 0 6px 24px rgba(49, 130, 206, 0.18);
+      border-radius: 14px;
+      width: 350px;
+      margin: 2rem auto;
+      font-family: 'Inter', Arial, sans-serif;
+      border: 1.5px solid #3182ce;
+    }
+    #paper-form label {
+      font-weight: 600;
+      color: #063aab;
+      margin-bottom: 0.2rem;
+      letter-spacing: 0.02em;
+    }
+    #paper-form input[type="text"],
+    #paper-form textarea,
+    #paper-form input[type="file"] {
+      padding: 0.6rem 0.8rem;
+      border: 1.5px solid #b6d0f7;
+      border-radius: 6px;
+      font-size: 1rem;
+      background: #ffffff;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+    #paper-form input[type="text"]:focus,
+    #paper-form textarea:focus {
+      border-color: #2563eb;
+      outline: none;
+      background: #eaf3ff;
+    }
+    #paper-form textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+    #paper-form input[type="file"] {
+      background: transparent;
+      border: none;
+      padding-left: 0;
+    }
+    #paper-submit {
+      background: linear-gradient(90deg, #2563eb 0%, #3182ce 100%);
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      padding: 0.7rem 0;
+      font-size: 1.08rem;
+      box-shadow: 0 2px 8px rgba(49, 130, 206, 0.13);
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    #paper-submit:hover {
+      background: linear-gradient(90deg, #1746a0 0%, #2563eb 100%);
+      box-shadow: 0 4px 16px rgba(49, 130, 206, 0.22);
+    }
+
+    #close {
+      background-color: rgba(154, 7, 7, 0.884);
+      border: none;
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 5px;
+    }
+
     </style>
     <div>
       <div id="icon"></div>
@@ -152,6 +225,19 @@
     </div>
     <div id="new-paper">Submit New Paper</div>
     <div id="explore-papers">Explore Other's Papers</div>
+
+    <form id="paper-form">
+      <div style="display: flex; justify-content: space-between;"><label for="paper-name">Name</label><button id="close">Close</button></div>
+      <input type="text" id="paper-name" name="paper-name" required />
+      <label for="paper-title">Title</label>
+      <input type="text" id="paper-title" name="paper-title" required />
+      <label for="paper-abstract">Abstract</label>
+      <textarea id="paper-abstract" name="paper-abstract" required></textarea>
+      <label for="paper-file">Upload Paper</label>
+      <input type="file" id="paper-file" name="paper-file" required />
+      <button type="submit" id="paper-submit">Submit</button>
+    </form>
+
     <script>
 
       let email = localStorage.getItem("authorEmail");
@@ -256,8 +342,15 @@
               if (!response.ok) {
                 console.error("Failed to fetch reviews:", response.statusText);
                 return;
-              } else {
-                let data = await response.json();
+              } 
+              let data = await response.json();
+              if (data.message === "No reviews yet!"){
+                let reviewDiv = document.createElement("div");
+                reviewDiv.classList.add("review");
+                reviewDiv.innerHTML = `<b>No reviews yet!</b>`;
+                btn.parentNode.appendChild(reviewDiv);
+              }
+              else {
                 console.log(data);
                 btn.style.display = "none"; // Hide the button after clicking
                 data.message.forEach((review) => {
@@ -281,6 +374,67 @@
 
       document.getElementById("explore-papers").addEventListener("click", () => {
         window.open('./papers.html', "_blank");
+      });
+
+      // Paper Submit Form Enable Disable logic
+      let paperFormToggle = false;
+      document.getElementById("new-paper").addEventListener("click", () => {
+        let paperForm = document.getElementById("paper-form");
+        if (paperFormToggle === false) {
+          paperForm.style.display = "flex";
+          paperFormToggle = true;
+        } else {
+          paperForm.style.display = "none";
+          paperFormToggle = false;
+        }
+      });
+
+      document.getElementById("close").addEventListener("click", (e) => {
+        e.preventDefault();
+        document.getElementById("paper-form").style.display = "none";
+        paperFormToggle = false;
+      });
+
+      // Submit New Paper
+      let paperForm = document.getElementById("paper-form");
+      paperForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        let formData = new FormData();
+        let contact_author = email;
+        let name = document.getElementById("paper-name").value;
+        let title = document.getElementById("paper-title").value;
+        let abstract = document.getElementById("paper-abstract").value;
+        formData.append("contact_author", contact_author);
+        formData.append("name", name);  
+        formData.append("title", title);
+        formData.append("abstract", abstract);
+        formData.append("paper", document.getElementById("paper-file").files[0]);
+        console.log(formData);
+        try {
+        let response = await fetch(
+          "http://localhost:5000/api/authorPaperSubmit",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+        if(!response.ok) {
+            throw new Error("Failed to submit paper: " + response.statusText);
+          } 
+        else {
+          let data = await response.json();
+          console.log(data);
+          alert("Paper Submitted Successfully!");
+          paperForm.reset();
+          paperForm.style.display = "none";
+          paperFormToggle = false;
+          document.getElementById("author-papers").innerHTML = "<h1>Your Papers</h1>";
+          papers(); // Refresh the papers list
+        }
+        } catch (error) {
+          console.error("Error submitting paper:", error.message);
+          return;
+        }
       });
 
     </script>

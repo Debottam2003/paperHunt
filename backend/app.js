@@ -4,6 +4,9 @@ import pool from './dbconnect.js';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import multer from 'multer';
+
+// Load environment variables from .env file
 dotenv.config();
 
 const app = express();
@@ -21,6 +24,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
+
+// Multer storage setup
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/papers'); // Folder to save files
+  },
+  filename: (req, file, cb) => {
+    console.log(file);
+    console.log(req.body);
+    cb(null, req.body.contact_author + file.originalname); // filename
+  }
+});
+
+const upload = multer({storage: storage});
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'home.html'));
@@ -158,10 +175,27 @@ app.post('/api/reviewerLogin', express.json(), async (req, res) => {
     }
 });
 
-app.post('/api/authorPaperSubmit', (req, res) => {
-    res.json({
-        message: 'Welcome to the author page!'
-    });
+app.post('/api/authorPaperSubmit', upload.single("paper"), async (req, res) => {
+    let { title, abstract, contact_author, name } = req.body;
+    if (!title || !abstract || !contact_author || !req.file) {
+        return res.status(400).json({
+            message: 'Please provide all the fields'
+        });
+    }
+    else {
+        console.log(req.body);
+        try{
+            let data = await pool.query('insert into papers(title, abstract, contact_author, filename, name) values($1, $2, $3, $4, $5) returning paper_id', [title, abstract, contact_author, contact_author + req.file.originalname, name]);
+            console.log(data.rows[0].paper_id);
+            res.json({ message: "Paper submitted successfully" });
+        }
+        catch(err) {
+            console.log(err);
+            res.status(500).json({
+                message: 'Internal Server Error in Paper Submission!'
+            });
+        }
+    }
 });
 
 app.post('/api/reviewerReviewSubmit', express.json(), async (req, res) => {
