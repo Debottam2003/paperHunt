@@ -82,6 +82,20 @@
         </form>
     </div>
     <script>
+
+function validateEmail() {
+    let authorEmail = localStorage.getItem("authorEmail");
+    let reviewerEmail = localStorage.getItem("reviewerEmail");
+    if(authorEmail) {
+      window.location.href = "./authorDashboard.html";
+      return;
+    }
+    else if(reviewerEmail) {
+      window.location.href = "./reviewerDashboard.html";
+    }
+}
+    validateEmail();
+
         document.querySelector('.login-form').addEventListener('submit', async function(event) {
             event.preventDefault(); // Prevent the form from submitting normally
 
