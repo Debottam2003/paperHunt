@@ -394,6 +394,57 @@ app.get('/api/checkuser/:email', async (req, res) => {
 
 });
 
+app.post('/api/assignPaper', express.json(), async (req, res) => {
+    let { paper_id, reviewer_email } = req.body;
+    if (!paper_id || !reviewer_email) {
+        return res.status(400).json({
+            message: 'Please provide paper id and reviewer email'
+        });
+    }
+    try {
+        
+        let check = await pool.query('select * from papers_assigned where paper_id = $1 and reviewer_email = $2', [paper_id, reviewer_email]);
+        if (check.rows.length > 0) {
+            console.log('Paper already assigned to this reviewer');
+            return res.status(400).json({
+                message: 'Paper already assigned to this reviewer'  
+            });
+        }
+        let data = await pool.query('insert into papers_assigned(paper_id, reviewer_email) values($1, $2)', [paper_id, reviewer_email]);
+        console.log(data);
+        res.json({
+            message: 'Paper assigned successfully'
+        });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Error in assigning paper'
+        });
+    }
+});
+
+app.delete("/api/assignPaperDelete", express.json(), async (req, res) => {
+    let { paper_id, reviewer_email } = req.body;
+    if (!paper_id || !reviewer_email) {
+        return res.status(400).json({
+            message: 'Please provide paper id and reviewer email'
+        });
+    }
+    try {
+        await pool.query('delete from papers_assigned where paper_id = $1 and reviewer_email = $2', [paper_id, reviewer_email]);
+        res.json({
+            message: 'Paper assignment deleted successfully'
+        });
+    }
+    catch(err) {
+        console.log(err);
+        return res.status(500).json({
+            message: 'Error in deleting paper assignment'
+        });
+    }
+});
+
 async function dbconnection() {
     try {
         const client = await pool.connect();

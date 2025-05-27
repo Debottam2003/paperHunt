@@ -166,6 +166,7 @@ create table papers_authors (
 create table papers_assigned (
     reviewer_email varchar(50),
     paper_id int,
+    PRIMARY KEY (reviewer_email, paper_id),
     Foreign Key (reviewer_email) REFERENCES reviewers(email) ON DELETE CASCADE on update cascade,
     Foreign Key (paper_id) REFERENCES papers(paper_id) ON DELETE CASCADE on update cascade
 );

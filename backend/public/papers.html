@@ -99,6 +99,18 @@
     </header>
     <div id="papers-list"></div>
     <script>
+
+    function validateEmail() {
+    let authorEmail = localStorage.getItem("authorEmail");
+    let reviewerEmail = localStorage.getItem("reviewerEmail");
+    if(!authorEmail && !reviewerEmail) {
+      alert("You are not logged in! Please login to view the papers.");
+      window.location.href = "./home.html";
+      return;
+    }
+}
+    validateEmail();
+
       // Function to fetch and display papers
       async function fetchPapers() {
         try {
@@ -126,6 +138,7 @@
             downloadLink.href = `./papers/${paper.filename}`;
             downloadLink.setAttribute("download", paper.filename);
             const downloadButton = document.createElement("button");
+            downloadButton.id = paper.paper_id;
             downloadButton.innerHTML = "Download Paper";
             downloadButton.classList.add("cta-btn");
             downloadLink.appendChild(downloadButton);
@@ -145,6 +158,41 @@
 
             papersList.appendChild(listItem);
           });
+
+          // Assigning the papers to the reviewers 
+          let reviewerEmail = localStorage.getItem("reviewerEmail");
+          if(reviewerEmail) {
+            let assignPapers = document.querySelectorAll(".cta-btn");
+            assignPapers.forEach((ap) => {
+              ap.addEventListener("click", async (event) => {
+                let paper_id = event.target.id;
+                try {
+                  let response = await fetch(
+                    `http://localhost:5000/api/assignPaper`,
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ reviewer_email: reviewerEmail, paper_id: paper_id }),
+                    }
+                  );
+                  if (!response.ok) {
+                    let data = await response.json();
+                    console.log("No Response");
+                    alert(data.message);
+                  } else {
+                    let data = await response.json();
+                    console.log(data.message);
+                    alert(data.message);
+                  }
+                } catch (err) {
+                  console.log(err);
+                }
+              });
+            });
+          }
+          
           // Getting the reviews for the papers
           let reviewButtons = document.querySelectorAll(".bta-btn");
           reviewButtons.forEach((rb) => {

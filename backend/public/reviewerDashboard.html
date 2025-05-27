@@ -93,15 +93,21 @@
       cursor: pointer;
       background-color: rgb(39, 114, 218);
     }
-    .give-review-button, .submit-review {
-      background-color: #2ecc40;
+    .give-review-button, .submit-review, .delete-paper {
+      background-color: #1ab02c;
       color: white;
       border: none;
       padding: 0.5rem 1rem;
       border-radius: 5px;
       cursor: pointer;
       margin-top: 1rem;
+      font-weight: bolder;
     }
+
+    .delete-paper {
+      background-color: rgb(176, 9, 9);
+    }
+
     #log-out {
       color: white;
       border: none;
@@ -292,6 +298,7 @@
 
       }
       fetchReviewerData();
+
       let show = false;
       btn.addEventListener("click", () => {
         if (show === false) {
@@ -335,11 +342,58 @@
             giveReviewButton.innerText = "Give Review";
             giveReviewButton.classList.add("give-review-button");
             giveReviewButton.id = paper.paper_id;
-
             paperDiv.appendChild(giveReviewButton);
+
+            // Each iteration of the loop has its own separate block scope 
+
+            let br = document.createElement("br");
+            paperDiv.appendChild(br);
+
+            
+            let deletePaper = document.createElement("button");
+            deletePaper.innerText = "Delete";
+            deletePaper.classList.add("delete-paper");
+            deletePaper.id = paper.paper_id;
+
+            paperDiv.appendChild(deletePaper);
 
             paperDiv.classList.add("paper");
             reviewerPapersDiv.appendChild(paperDiv);
+          });
+
+          let deletePaperButtons = document.querySelectorAll(".delete-paper");
+          deletePaperButtons.forEach((dp) => {
+            dp.addEventListener("click", async (e) => {
+              let sure = confirm("Are you sure ?");
+              if (!sure) {
+                return;
+              }
+              let paper_id = e.target.id;
+              try {
+              let response = await fetch("http://localhost:5000/api/assignPaperDelete", {
+                method: "DELETE",
+                headers: {
+                  'Content-type': "application/json"
+                },
+                body: JSON.stringify({ paper_id, reviewer_email: email })
+              });
+              if(!response.ok) {
+                throw new Error("Failed to delete paper");
+              }
+              else if(response.ok && response.status === 200) {
+                console.log("Paper deleted successfully");
+                let data = await response.json();
+                alert(data.message);
+                 let reviewerPapersDiv = document.getElementById("reviewer-papers");
+                reviewerPapersDiv.innerHTML = "<h1>Your Assigned Papers</h1>"; // Clear the existing papers
+                fetchReviewerPapers(); // Fetch papers again to update the list
+              }
+            } catch (error) {
+              console.log(error.message);
+              alert("Failed to delete paper. Please try again later.");
+              return;
+            }
+            });
           });
 
         // Review Form Enable and Disable 
