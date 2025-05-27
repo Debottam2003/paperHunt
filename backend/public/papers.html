@@ -120,7 +120,7 @@
             contactAuthor.innerHTML = `<B>Author:</B> ${paper.contact_author}`;
 
             const abstract = document.createElement("p");
-            abstract.innerHTML = `<B>Abstarct:</B> ${paper.abstract}`;
+            abstract.innerHTML = `<B>Abstract:</B> ${paper.abstract}`;
 
             const downloadLink = document.createElement("a");
             downloadLink.href = `./papers/${paper.filename}`;
@@ -161,6 +161,14 @@
                   console.log(data.message);
 
                   event.target.style.display = "none";
+
+                  if(data.message === "No reviews yet!") {
+                    let noReviewsDiv = document.createElement("div");
+                    noReviewsDiv.classList.add("review");
+                    noReviewsDiv.innerHTML = `<b>No reviews yet for this paper.</b>`;
+                    event.target.parentNode.appendChild(noReviewsDiv);
+                    return;
+                  }
 
                   data.message.forEach((review) => {
 

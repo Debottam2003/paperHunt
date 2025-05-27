@@ -248,12 +248,12 @@ app.get('/api/reviews/:paper_id', async (req, res) => {
         where reviews.paper_id = $1`, [paper_id]);
         console.log(data.rows);
         if (data.rows.length === 0) {
-            return res.json({
+            return res.status(200).json({
                 message: 'No reviews yet!'
             });
         }
         else {
-            res.json({
+            res.status(200).json({
                 message: data.rows
             });
         }
