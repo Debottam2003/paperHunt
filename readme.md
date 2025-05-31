@@ -25,11 +25,12 @@
 ![Image](https://github.com/user-attachments/assets/c725f028-e785-4dd6-bd43-0869338bdfcb)
 # 7. Reviewer Dashboard
 ![Image](https://github.com/user-attachments/assets/d68b57f1-4b56-4ba2-82ed-1a5c99c7f406)
+![Image](https://github.com/user-attachments/assets/634f93eb-9570-48db-9823-772479f011e4)
 # 8. Reviewer Review Form
 ![Image](https://github.com/user-attachments/assets/22f50d47-d8ec-4f61-836c-9fd76d3e82b4)
 # 9. All Papers
-![Image](https://github.com/user-attachments/assets/634f93eb-9570-48db-9823-772479f011e4)
 ![Image](https://github.com/user-attachments/assets/5487e09e-bbaa-44e0-8523-7a5f5e5f1466)
+# 10. Author Dashboard
 ![Image](https://github.com/user-attachments/assets/7fe20e40-2a48-4d3f-a939-5a606d5074d1)
 ![Image](https://github.com/user-attachments/assets/3e343dbe-665f-410e-9043-c37245c616d1)
 ![Image](https://github.com/user-attachments/assets/0f96267e-99af-491e-9117-5cbfa1b92d70)
