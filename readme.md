@@ -30,7 +30,8 @@
 ![Image](https://github.com/user-attachments/assets/22f50d47-d8ec-4f61-836c-9fd76d3e82b4)
 # 9. All Papers
 ![Image](https://github.com/user-attachments/assets/5487e09e-bbaa-44e0-8523-7a5f5e5f1466)
-# 10. Author Dashboard
+# 10. Reviews of the Papers
 ![Image](https://github.com/user-attachments/assets/7fe20e40-2a48-4d3f-a939-5a606d5074d1)
+# 11. Author Dashboard
 ![Image](https://github.com/user-attachments/assets/3e343dbe-665f-410e-9043-c37245c616d1)
 ![Image](https://github.com/user-attachments/assets/0f96267e-99af-491e-9117-5cbfa1b92d70)
