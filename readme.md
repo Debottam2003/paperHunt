@@ -11,12 +11,19 @@
 # ---Backend---
 # nodejs, express js, Postgreysql
 
+# Landing Page
 ![Image](https://github.com/user-attachments/assets/8894ca8a-1452-4059-8735-1a28596612af)
+# Choose Role
 ![Image](https://github.com/user-attachments/assets/f9bd034e-41cc-4587-8647-2c220ab74086)
+# Author Login
 ![Image](https://github.com/user-attachments/assets/50c4233f-7cf4-43e6-ab7e-adbbcf1053a6)
+# New Author Register
 ![Image](https://github.com/user-attachments/assets/3be9bea2-2ede-4364-8ded-7df7f3f66d8c)
+# Reviewer Login
 ![Image](https://github.com/user-attachments/assets/2829b40a-3d24-4e0b-8ef0-5dc645852ac8)
+# Reviewer Register
 ![Image](https://github.com/user-attachments/assets/c725f028-e785-4dd6-bd43-0869338bdfcb)
+# 
 ![Image](https://github.com/user-attachments/assets/d68b57f1-4b56-4ba2-82ed-1a5c99c7f406)
 ![Image](https://github.com/user-attachments/assets/22f50d47-d8ec-4f61-836c-9fd76d3e82b4)
 ![Image](https://github.com/user-attachments/assets/634f93eb-9570-48db-9823-772479f011e4)
