@@ -10,5 +10,3 @@
 # vanila js
 # ---Backend---
 # nodejs, express js, Postgreysql
-
-<img src = "./ss/Screenshot(60).png" />
