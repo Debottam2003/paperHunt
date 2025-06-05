@@ -19,6 +19,7 @@
           padding: 0;
           overflow: auto;
           height: 100%;
+          font-family: 'Inter', Arial, sans-serif;
         }
         .review-form {
           max-height: 90vh;
@@ -82,7 +83,7 @@
       font-weight: bolder;
       margin: 2rem;
       height: 20px;
-      padding: 1rem;
+      padding: 1.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -225,6 +226,13 @@
       padding: 0.5rem;
       border-radius: 5px;
     }
+
+    @media (max-width: 675px) {
+      body {
+        flex-direction: column;
+      }
+    }
+
     </style>
     <div id="profile">
     <div id="icon"></div>
