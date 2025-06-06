@@ -115,7 +115,7 @@
       async function fetchPapers() {
         try {
           // Setting the papers to public
-          const response = await fetch("http://localhost:5000/api/papers");
+          const response = await fetch("http://localhost:3333/api/papers");
           if (!response.ok) {
             throw new Error("Network response was not ok");
           }
@@ -168,7 +168,7 @@
                 let paper_id = event.target.id;
                 try {
                   let response = await fetch(
-                    `http://localhost:5000/api/assignPaper`,
+                    `http://localhost:3333/api/assignPaper`,
                     {
                       method: "POST",
                       headers: {
@@ -200,7 +200,7 @@
               let paper_id = event.target.id;
               try {
                 let response = await fetch(
-                  `http://localhost:5000/api/reviews/${paper_id}`
+                  `http://localhost:3333/api/reviews/${paper_id}`
                 );
                 if (!response.ok) {
                   console.log("No Response");

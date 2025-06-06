@@ -103,7 +103,7 @@ function validateEmail() {
             const password = document.getElementById('password').value;
 
             // Perform your login logic here
-            let response = await fetch('http://localhost:5000/api/authorLogin',{
+            let response = await fetch('http://localhost:3333/api/authorLogin',{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

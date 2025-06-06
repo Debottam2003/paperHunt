@@ -259,7 +259,7 @@
       let btn = document.getElementById("icon");
       async function fetchAuthorData() {
         let response = await fetch(
-          `http://localhost:5000/api/authors/${email}`
+          `http://localhost:3333/api/authors/${email}`
         );
         if (!response.ok) {
           console.error("Failed to fetch author data:", response.statusText);
@@ -303,7 +303,7 @@
 
       async function papers() {
         let response = await fetch(
-          `http://localhost:5000/api/authorsPapers/${email}`
+          `http://localhost:3333/api/authorsPapers/${email}`
         );
         if (!response.ok) {
           console.log("Falied to fetch author papers:", response.statusText);
@@ -345,7 +345,7 @@
             btn.addEventListener("click", async (req, res) => {
               let paper_id = btn.id;
               let response = await fetch(
-                `http://localhost:5000/api/reviews/${paper_id}`
+                `http://localhost:3333/api/reviews/${paper_id}`
               );
               if (!response.ok) {
                 console.error("Failed to fetch reviews:", response.statusText);
@@ -421,7 +421,7 @@
         console.log(formData);
         try {
         let response = await fetch(
-          "http://localhost:5000/api/authorPaperSubmit",
+          "http://localhost:3333/api/authorPaperSubmit",
           {
             method: "POST",
             body: formData,

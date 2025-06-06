@@ -103,7 +103,7 @@ function validateEmail() {
             let password = document.getElementById("password").value;
             console.log(email);
 
-            let response = await fetch("http://localhost:5000/api/reviewerLogin", {
+            let response = await fetch("http://localhost:3333/api/reviewerLogin", {
                 method: "POST",
                 headers: {
                     'Content-type': "application/json"

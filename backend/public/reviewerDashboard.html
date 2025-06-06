@@ -277,7 +277,7 @@
       // Fetch reviewer data
       async function fetchReviewerData() {
         let response = await fetch(
-          `http://localhost:5000/api/reviewers/${email}`
+          `http://localhost:3333/api/reviewers/${email}`
         );
         if (!response.ok) {
           console.error("Failed to fetch author data:", response.statusText);
@@ -319,7 +319,7 @@
       });
 
       async function fetchReviewerPapers() {
-        let response = await fetch(`http://localhost:5000/api/reviewersPapers/${email}`);
+        let response = await fetch(`http://localhost:3333/api/reviewersPapers/${email}`);
         if (!response.ok) {
           console.error("Failed to fetch reviewer papers:", response.statusText);
           return;
@@ -378,7 +378,7 @@
               }
               let paper_id = e.target.id;
               try {
-              let response = await fetch("http://localhost:5000/api/assignPaperDelete", {
+              let response = await fetch("http://localhost:3333/api/assignPaperDelete", {
                 method: "DELETE",
                 headers: {
                   'Content-type': "application/json"
@@ -449,7 +449,7 @@
         let readability = document.getElementById("readability").value;
         let relevance = document.getElementById("relevance").value;
         let originality = document.getElementById("originality").value;
-        let response = await fetch("http://localhost:5000/api/reviewerReviewSubmit", {
+        let response = await fetch("http://localhost:3333/api/reviewerReviewSubmit", {
           method: "POST",
           headers: {
             'Content-type': "application/json"

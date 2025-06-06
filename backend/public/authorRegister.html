@@ -111,7 +111,7 @@ function validateEmail() {
             let password = document.getElementById("password").value;
             console.log(email, firstname, lastname);
 
-            let response = await fetch("http://localhost:5000/api/authorRegister", {
+            let response = await fetch("http://localhost:3333/api/authorRegister", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

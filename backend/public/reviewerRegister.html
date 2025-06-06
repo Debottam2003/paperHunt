@@ -131,7 +131,7 @@ function validateEmail() {
 
             console.log(email, firstname, lastname, phonenumber, affiliation, interest1, interest2);
 
-            let response = await fetch("http://localhost:5000/api/reviewerRegister", {
+            let response = await fetch("http://localhost:3333/api/reviewerRegister", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
