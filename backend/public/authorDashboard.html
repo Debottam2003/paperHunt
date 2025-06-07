@@ -48,6 +48,10 @@
         display: inline;
       }
 
+      #filename {
+        display: none;
+      }
+
       #author-data {
         font-family: Arial, sans-serif;
         font-size: 1rem;
@@ -80,13 +84,17 @@
         border-radius: 5px;
       }
 
-      .review-button {
+      .review-button, .delete-button {
         background-color: rgb(6, 139, 28);
         color: white;
         border: none;
         padding: 0.5rem 1rem;
         border-radius: 5px;
         cursor: pointer;
+      }
+
+      .delete-button {
+        background-color: rgb(166, 7, 7);
       }
 
       .review {
@@ -247,7 +255,9 @@
     </form>
 
     <script>
-
+ 
+      let filedata = new Map();
+      
       let email = localStorage.getItem("authorEmail");
       if (!email) {
         console.error("No author email found in localStorage.");
@@ -324,6 +334,9 @@
           let authorPapersDiv = document.getElementById("author-papers");
 
           data.message.forEach((paper) => {
+
+            filedata.set(String(paper.paper_id), paper.filename);
+
             let paperDiv = document.createElement("div");
             paperDiv.innerHTML = `<b>Title</b>:
               <h3 id="title">${paper.title.toUpperCase()}</h3>
@@ -333,11 +346,63 @@
             review.innerText = "View Reviews";
             review.classList.add("review-button");
             review.id = `${paper.paper_id}`;
-
             paperDiv.appendChild(review);
+
+            for(let i = 1; i <= 2; i++){
+            let br = document.createElement("br");
+            paperDiv.appendChild(br);
+            }
+
+            const deletebtn = document.createElement("button");
+            deletebtn.innerText = "Delete";
+            deletebtn.classList.add("delete-button");
+            deletebtn.id = `${paper.paper_id}`;
+            paperDiv.appendChild(deletebtn);
+
+            let filename = document.createElement("p")
+            filename.innerHTML = paper.filename;
+            filename.id = "filename";
+
+            paperDiv.appendChild(filename);
+
             paperDiv.id = `${paper.paper_id}`;
             paperDiv.classList.add("paper");
+
             authorPapersDiv.appendChild(paperDiv);
+          });
+
+          // Paper deletetion
+          let deleteButtons = document.querySelectorAll(".delete-button");
+          deleteButtons.forEach((db) => {
+            db.addEventListener('click', async (e) => {
+              let paper_id = Number(e.target.id);
+              console.log(paper_id);
+              let sure = confirm("Are you sure you want to delete " + filedata.get(paper_id));
+              if(sure) {
+                try {
+                let response = await fetch("http://localhost:3333/api/authorPaperDelete", {
+                  method: "DELETE",
+                  headers: {
+                    'Content-type': "application/json"
+                  },
+                  body: JSON.stringify({paper_id: paper_id, filename: filedata.get(paper_id), contact_author: email})
+                });
+                if(!response.ok) {
+                    let data = await response.json();
+                    alert(data.message);
+                  }
+                else {
+                    let data = await response.json();
+                    alert(data.message);
+                    let authorPapersDiv = document.getElementById("author-papers");
+                    authorPapersDiv.innerHTML = "<h1>Your Papers</h1>";
+                    papers(); // Refresh the papers list
+                }
+              } catch (err) {
+                alert(err.message);
+              }
+              }
+            })
           });
 
           let reviewButtons = document.querySelectorAll(".review-button");

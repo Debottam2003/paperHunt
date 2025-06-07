@@ -1,6 +1,0 @@
-Golang, also known as Go, is an open-source programming language developed by Google. 
-It is designed for simplicity, efficiency, and reliability, making it ideal for building 
-scalable and high-performance applications. Go features a clean syntax, strong concurrency 
-support through goroutines, and a robust standard library. Its static typing and efficient 
-garbage collection contribute to fast execution and easy maintenance. Golang is widely used 
-in cloud computing, web development, and distributed systems due to its speed and ease of deployment.

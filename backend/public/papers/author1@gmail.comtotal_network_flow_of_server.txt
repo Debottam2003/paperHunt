@@ -1,0 +1,8 @@
+http requests ➡️ tcp packets ➡️ bit stream ➡️ radio Waves
+Incoming Radio Waves ➡️ NIC Converts to Binary
+                    ⬇️
+            OS Network Stack Verifies IP
+                    ⬇️
+       Transport Layer Routes to Port 5000
+                    ⬇️
+       Node.js Express App Processes Request -> response

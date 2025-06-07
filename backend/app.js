@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
+import fs from 'fs/promises';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -27,17 +28,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Multer storage setup
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/papers'); // Folder to save files
-  },
-  filename: (req, file, cb) => {
-    console.log(file);
-    console.log(req.body);
-    cb(null, req.body.contact_author + file.originalname); // filename
-  }
+    destination: (req, file, cb) => {
+        cb(null, 'public/papers'); // Folder to save files
+    },
+    filename: (req, file, cb) => {
+        console.log(file);
+        console.log(req.body);
+        cb(null, req.body.contact_author + file.originalname); // filename
+    }
 });
 
-const upload = multer({storage: storage});
+const upload = multer({ storage: storage });
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'home.html'));
@@ -184,12 +185,12 @@ app.post('/api/authorPaperSubmit', upload.single("paper"), async (req, res) => {
     }
     else {
         console.log(req.body);
-        try{
+        try {
             let data = await pool.query('insert into papers(title, abstract, contact_author, filename, name) values($1, $2, $3, $4, $5) returning paper_id', [title, abstract, contact_author, contact_author + req.file.originalname, name]);
             console.log(data.rows[0].paper_id);
             res.json({ message: "Paper submitted successfully" });
         }
-        catch(err) {
+        catch (err) {
             console.log(err);
             res.status(500).json({
                 message: 'Internal Server Error in Paper Submission!'
@@ -268,7 +269,7 @@ app.get('/api/reviews/:paper_id', async (req, res) => {
 
 app.get('/api/authors/:email', async (req, res) => {
     console.log(req.params.email);
-    if(!req.params.email) {
+    if (!req.params.email) {
         return res.status(400).json({
             message: 'Please provide email'
         });
@@ -285,7 +286,7 @@ app.get('/api/authors/:email', async (req, res) => {
             message: data.rows[0]
         });
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
         res.status(500).json({
             message: 'Error in getting author details'
@@ -295,7 +296,7 @@ app.get('/api/authors/:email', async (req, res) => {
 
 app.get('/api/reviewers/:email', async (req, res) => {
     console.log(req.params.email);
-    if(!req.params.email) {
+    if (!req.params.email) {
         return res.status(400).json({
             message: 'Please provide email'
         });
@@ -312,7 +313,7 @@ app.get('/api/reviewers/:email', async (req, res) => {
             message: data.rows[0]
         });
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
         res.status(500).json({
             message: 'Error in getting reviewer details'
@@ -326,9 +327,9 @@ app.get('/api/papers', async (req, res) => {
         console.log(data.rows);
         res.json({
             message: data.rows
-    });
+        });
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
         res.status(500).json({
             message: 'Error in getting papers'
@@ -402,12 +403,12 @@ app.post('/api/assignPaper', express.json(), async (req, res) => {
         });
     }
     try {
-        
+
         let check = await pool.query('select * from papers_assigned where paper_id = $1 and reviewer_email = $2', [paper_id, reviewer_email]);
         if (check.rows.length > 0) {
             console.log('Paper already assigned to this reviewer');
             return res.status(400).json({
-                message: 'Paper already assigned to this reviewer'  
+                message: 'Paper already assigned to this reviewer'
             });
         }
         let data = await pool.query('insert into papers_assigned(paper_id, reviewer_email) values($1, $2)', [paper_id, reviewer_email]);
@@ -437,8 +438,33 @@ app.delete("/api/assignPaperDelete", express.json(), async (req, res) => {
             message: 'Paper assignment deleted successfully'
         });
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
+        return res.status(500).json({
+            message: 'Error in deleting paper assignment'
+        });
+    }
+});
+
+app.delete("/api/authorPaperDelete", express.json(), async (req, res) => {
+    let { paper_id, contact_author, filename } = req.body;
+    if (!paper_id || !contact_author || !filename) {
+        return res.status(400).json({
+            message: 'Please provide paper id and cpntact_author and filename'
+        });
+    }
+    try {
+        console.log(paper_id);
+        await pool.query('delete from papers where paper_id = $1 and contact_author = $2 and filename = $3', [paper_id, contact_author, filename]);
+         const filePath = path.join(__dirname, 'public/papers', `${filename}`);
+        await fs.unlink(filePath);
+        console.log("Paper deleted successfully.");
+        res.json({
+            message: 'Paper deleted successfully'
+        });
+    }
+    catch (err) {
+        console.log(err.message);
         return res.status(500).json({
             message: 'Error in deleting paper assignment'
         });
