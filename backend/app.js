@@ -1,3 +1,4 @@
+// Import all the required Objects( As in js everything is considered as Objects)...
 import express from 'express';
 import cors from 'cors';
 import pool from './dbconnect.js';
@@ -7,15 +8,19 @@ import { fileURLToPath } from 'url';
 import multer from 'multer';
 import fs from 'fs/promises';
 
-// Load environment variables from .env file
+// Load environment variables from .env file...
 dotenv.config();
 
+// Creating the express app...
 const app = express();
+
+// Adding the the request Origin that the Server will not block this Origin and server...
 app.use(cors({
     origin: 'http://localhost:4000',
     method: 'GET, POST, PUT, DELETE, PATCH',
 }));
 
+// Setting the current filename and directry name
 const __filename = fileURLToPath(import.meta.url);
 // console.log(import.meta);
 console.log(__filename);
@@ -26,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 
-// Multer storage setup
+// Multer storage setup for file upload...
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'public/papers'); // Folder to save files
@@ -38,12 +43,15 @@ const storage = multer.diskStorage({
     }
 });
 
+// Creating upload function...
 const upload = multer({ storage: storage });
 
+// Landing Page route...
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'home.html'));
 });
 
+// Author Registration Route...
 app.post('/api/authorRegister', express.json(), async (req, res) => {
     const { email, password, firstname, lastname } = req.body;
     if (!email || !password || !firstname || !lastname) {
@@ -73,6 +81,7 @@ app.post('/api/authorRegister', express.json(), async (req, res) => {
     }
 });
 
+// Reviewer Registration Route...
 app.post("/api/reviewerRegister", express.json(), async (req, res) => {
     let { email, password, firstname, lastname, phonenumber, affiliation, interest1, interest2 } = req.body;
     if (!email || !password || !firstname || !lastname || !phonenumber || !affiliation || !interest1 || !interest2) {
@@ -107,6 +116,7 @@ app.post("/api/reviewerRegister", express.json(), async (req, res) => {
     }
 });
 
+// Author Login Route...
 app.post("/api/authorLogin", express.json(), async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -141,6 +151,7 @@ app.post("/api/authorLogin", express.json(), async (req, res) => {
     }
 });
 
+// Reviewer Login Route...
 app.post('/api/reviewerLogin', express.json(), async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -176,6 +187,7 @@ app.post('/api/reviewerLogin', express.json(), async (req, res) => {
     }
 });
 
+// Author Paper Submit Route...
 app.post('/api/authorPaperSubmit', upload.single("paper"), async (req, res) => {
     let { title, abstract, contact_author, name } = req.body;
     if (!title || !abstract || !contact_author || !req.file) {
@@ -199,6 +211,7 @@ app.post('/api/authorPaperSubmit', upload.single("paper"), async (req, res) => {
     }
 });
 
+// Reviewer Review Submit Route...
 app.post('/api/reviewerReviewSubmit', express.json(), async (req, res) => {
     console.log(req.body);
     let { paper_id, reviewer_email, feedback, comment, technical_merit, readability, originality, relevance } = req.body;
@@ -226,6 +239,7 @@ app.post('/api/reviewerReviewSubmit', express.json(), async (req, res) => {
     }
 });
 
+// Check The Papers Review Route...
 app.get('/api/reviews/:paper_id', async (req, res) => {
     let paper_id = req.params.paper_id;
     if (!paper_id) {
@@ -267,6 +281,7 @@ app.get('/api/reviews/:paper_id', async (req, res) => {
     }
 });
 
+// Check the particular Author's data...
 app.get('/api/authors/:email', async (req, res) => {
     console.log(req.params.email);
     if (!req.params.email) {
@@ -294,6 +309,7 @@ app.get('/api/authors/:email', async (req, res) => {
     }
 });
 
+// Check the particular Rviewer's data...
 app.get('/api/reviewers/:email', async (req, res) => {
     console.log(req.params.email);
     if (!req.params.email) {
@@ -321,6 +337,7 @@ app.get('/api/reviewers/:email', async (req, res) => {
     }
 });
 
+// Papers route...
 app.get('/api/papers', async (req, res) => {
     try {
         let data = await pool.query('select * from papers');
@@ -364,6 +381,7 @@ app.get('/api/authorsPapers/:email', async (req, res) => {
     }
 });
 
+// Reviewer's assigned papers...
 app.get('/api/reviewersPapers/:email', async (req, res) => {
     let email = req.params.email;
     if (!email) {
@@ -391,10 +409,7 @@ app.get('/api/reviewersPapers/:email', async (req, res) => {
     }
 });
 
-app.get('/api/checkuser/:email', async (req, res) => {
-
-});
-
+// Assign papers to Reviewers that they can download...
 app.post('/api/assignPaper', express.json(), async (req, res) => {
     let { paper_id, reviewer_email } = req.body;
     if (!paper_id || !reviewer_email) {
@@ -425,6 +440,7 @@ app.post('/api/assignPaper', express.json(), async (req, res) => {
     }
 });
 
+// Reviewer Papers delete request...
 app.delete("/api/assignPaperDelete", express.json(), async (req, res) => {
     let { paper_id, reviewer_email } = req.body;
     if (!paper_id || !reviewer_email) {
@@ -446,6 +462,7 @@ app.delete("/api/assignPaperDelete", express.json(), async (req, res) => {
     }
 });
 
+// Author Papers delete request...
 app.delete("/api/authorPaperDelete", express.json(), async (req, res) => {
     let { paper_id, contact_author, filename } = req.body;
     if (!paper_id || !contact_author || !filename) {
@@ -471,10 +488,12 @@ app.delete("/api/authorPaperDelete", express.json(), async (req, res) => {
     }
 });
 
+// Database Connection...
 async function dbconnection() {
     try {
         const client = await pool.connect();
         console.log('Connected to the database');
+        // If the Data Base connection is succesful the server will be started only then...
         app.listen(process.env.PORT, () => {
             console.log(`Server is running on port ${process.env.PORT}`);
             console.log(`http://localhost: ${process.env.PORT}`);
