@@ -8,8 +8,9 @@ import { fileURLToPath } from 'url';
 import multer from 'multer';
 import fs from 'fs/promises';
 
-// Load environment variables from .env file...
+// Load environment variables from .env file and adding in the the process.env object...
 dotenv.config();
+// console.log(process.env);
 
 // Creating the express app...
 const app = express();
