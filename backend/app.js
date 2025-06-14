@@ -27,7 +27,7 @@ const __filename = fileURLToPath(import.meta.url);
 console.log(__filename);
 const __dirname = path.dirname(__filename);
 console.log(__dirname);
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
@@ -48,9 +48,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Landing Page route...
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'home.html'));
-});
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'public', 'home.html'));
+// });
 
 // Author Registration Route...
 app.post('/api/authorRegister', express.json(), async (req, res) => {
