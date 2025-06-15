@@ -98,7 +98,7 @@
             <input type="text" id="affiliation" name="affiliation" required>
 
             <button type="submit">Register</button>
-            <a href="./reviewerLogin.html" id="login-btn"><h5>Already Have account?</h5><h3>Login</h4></a>
+            <a href="/reviewerLogin" id="login-btn"><h5>Already Have account?</h5><h3>Login</h4></a>
         </form>
     </div>
     <script>
@@ -107,11 +107,11 @@ function validateEmail() {
     let authorEmail = localStorage.getItem("authorEmail");
     let reviewerEmail = localStorage.getItem("reviewerEmail");
     if(authorEmail) {
-      window.location.href = "./authorDashboard.html";
+      window.location.href = "/authorDashboard";
       return;
     }
     else if(reviewerEmail) {
-      window.location.href = "./reviewerDashboard.html";
+      window.location.href = "/reviewerDashboard";
     }
 }
     validateEmail();
@@ -147,7 +147,7 @@ function validateEmail() {
             else{
                 alert(data.message);
                 localStorage.setItem("reviewerEmail", email);
-                window.location.href = "./reviewerDashboard.html";
+                window.location.href = "/reviewerDashboard";
             }
 
         });

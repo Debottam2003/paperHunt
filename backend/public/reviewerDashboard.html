@@ -266,7 +266,8 @@
       if (!email) {
         console.error("No reviewer email found in localStorage.");
         // Optionally redirect to login or show an error message
-        window.location.href = './home.html';
+        alert("You are not logged in! Please login first");
+        window.location.href = '/';
       }
 
       let reviewFormToggle = false;
@@ -300,7 +301,7 @@
         let sure = confirm("Are You Sure");
         if(sure) {
           localStorage.removeItem('reviewerEmail');
-          window.location.href = "./home.html";
+          window.location.href = "/";
         }
       });
 
@@ -424,7 +425,7 @@
       fetchReviewerPapers();
 
       document.getElementById("explore-papers").addEventListener("click", () => {
-        window.open('./papers.html', "_blank");
+        window.location.href = '/papers';
       });
 
       // Close the form

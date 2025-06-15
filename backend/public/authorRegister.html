@@ -84,7 +84,7 @@ background: linear-gradient(135deg, #c2d6ec 0%, #ffffff 100%);
             <input type="password" id="password" name="password" required>
 
             <button type="submit">Register</button>
-            <a href="./authorLogin.html" id="login-btn"><h5>Already Have account?</h5><h3>Login</h3></a>
+            <a href="./authorLogin" id="login-btn"><h5>Already Have account?</h5><h3>Login</h3></a>
         </form>
     </div>
     <script>
@@ -93,11 +93,11 @@ function validateEmail() {
     let authorEmail = localStorage.getItem("authorEmail");
     let reviewerEmail = localStorage.getItem("reviewerEmail");
     if(authorEmail) {
-      window.location.href = "./authorDashboard.html";
+      window.location.href = "/authorDashboard";
       return;
     }
     else if(reviewerEmail) {
-      window.location.href = "./reviewerDashboard.html";
+      window.location.href = "/reviewerDashboard";
     }
 }
     validateEmail();
@@ -127,7 +127,7 @@ function validateEmail() {
             else{
                 alert(data.message);
                 localStorage.setItem("authorEmail", email);
-                window.location.href = "./authorDashboard.html";
+                window.location.href = "./authorDashboard";
             }
 
         });

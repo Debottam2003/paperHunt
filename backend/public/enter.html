@@ -45,18 +45,18 @@
       }
     </style>
     <div>
-      <a href="./authorLogin.html" class="author"> As Author </a>
-      <a href="./reviewerLogin.html" class="reviewer"> As Reviewer </a>
+      <a href="./authorLogin" class="author"> As Author </a>
+      <a href="./reviewerLogin" class="reviewer"> As Reviewer </a>
     </div>
   </body>
   <script>
     let authorEmail = localStorage.getItem("authorEmail");
     let reviewerEmail = localStorage.getItem("reviewerEmail");
     if(authorEmail) {
-      window.location.href = "./authorDashboard.html";
+      window.location.href = "./authorDashboard";
     }
     else if(reviewerEmail) {
-      window.location.href = "./reviewerDashboard.html";
+      window.location.href = "./reviewerDashboard";
     }
   </script>
 </html>

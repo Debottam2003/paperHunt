@@ -78,7 +78,7 @@
             <input type="password" id="password" name="password" required>
 
             <button type="submit">Login</button>
-            <a href="./authorRegister.html" id="register-btn"><h4>Register</h4></a>
+            <a href="/authorRegister" id="register-btn"><h4>Register</h4></a>
         </form>
     </div>
     <script>
@@ -87,11 +87,11 @@ function validateEmail() {
     let authorEmail = localStorage.getItem("authorEmail");
     let reviewerEmail = localStorage.getItem("reviewerEmail");
     if(authorEmail) {
-      window.location.href = "./authorDashboard.html";
+      window.location.href = "/authorDashboard";
       return;
     }
     else if(reviewerEmail) {
-      window.location.href = "./reviewerDashboard.html";
+      window.location.href = "/reviewerDashboard";
     }
 }
     validateEmail();
@@ -119,7 +119,7 @@ function validateEmail() {
                 let data = await response.json();
                 alert(data.message);
                 localStorage.setItem('authorEmail', email);
-                window.location.href = 'authorDashboard.html';
+                window.location.href = '/authorDashboard';
             }
             // Example: Redirect to another page after login
             // window.location.href = 'authorDashboard.html';

@@ -105,7 +105,7 @@
     let reviewerEmail = localStorage.getItem("reviewerEmail");
     if(!authorEmail && !reviewerEmail) {
       alert("You are not logged in! Please login to view the papers.");
-      window.location.href = "./home.html";
+      window.location.href = "/";
       return;
     }
 }
@@ -135,7 +135,7 @@
             abstract.innerHTML = `<B>Abstract:</B> ${paper.abstract}`;
 
             const downloadLink = document.createElement("a");
-            downloadLink.href = `./papers/${paper.filename}`;
+            downloadLink.href = `/papers/${paper.filename}`;
             downloadLink.setAttribute("download", paper.filename);
             const downloadButton = document.createElement("button");
             downloadButton.id = paper.paper_id;
