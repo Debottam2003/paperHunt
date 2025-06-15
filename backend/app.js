@@ -474,7 +474,7 @@ app.delete("/api/authorPaperDelete", express.json(), async (req, res) => {
     try {
         console.log(paper_id);
         await pool.query('delete from papers where paper_id = $1 and contact_author = $2 and filename = $3', [paper_id, contact_author, filename]);
-         const filePath = path.join(__dirname, 'public/papers', `${filename}`);
+        const filePath = path.join(__dirname, 'public/papers', `${filename}`);
         await fs.unlink(filePath);
         console.log("Paper deleted successfully.");
         res.json({
