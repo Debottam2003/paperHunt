@@ -494,7 +494,7 @@ async function dbconnection() {
     try {
         const client = await pool.connect();
         console.log('Connected to the database');
-        // If the Data Base connection is succesful the server will be started only then...
+        // If the Data Base connection is succesful only then the server will be started ...
         app.listen(process.env.PORT, () => {
             console.log(`Server is running on port ${process.env.PORT}`);
             console.log(`http://localhost: ${process.env.PORT}`);
