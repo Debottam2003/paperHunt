@@ -12,7 +12,7 @@
   </head>
   <body>
     <style>
-      body{
+      body {
         background: repeating-linear-gradient(
           180deg,
           #fff 0px,
@@ -22,7 +22,7 @@
         );
         background-size: 100% 34px;
         background-repeat: repeat;
-        font-family: 'Inter', 'Courier New', Courier, monospace;
+        font-family: "Inter", "Courier New", Courier, monospace;
       }
       #papers-list {
         display: flex;
@@ -71,28 +71,28 @@
       .bta-btn {
         background-color: rgb(9, 149, 9);
       }
-    .review {
-      padding: 1.2rem 1.5rem;
-      margin: 1.2rem 0;
-      border: 2px solid #3182ce;
-      border-radius: 12px;
-      background: linear-gradient(90deg, #e3f0ff 0%, #f9f9f9 100%);
-      width: 92%;
-      max-width: 850px;
-      box-shadow: 0 4px 18px rgba(49, 130, 206, 0.12);
-      font-family: 'Inter', Arial, sans-serif;
-      font-size: 1.08rem;
-      color: #1a202c;
-      transition: box-shadow 0.2s, border-color 0.2s;
-    }
-    .review:hover {
-      box-shadow: 0 8px 32px rgba(49, 130, 206, 0.22);
-      border-color: #033297;
-      background: linear-gradient(90deg, #dbeafe 0%, #f0f4f8 100%);
-    }
-    .review b {
-      color: #2563eb;
-    }
+      .review {
+        padding: 1.2rem 1.5rem;
+        margin: 1.2rem 0;
+        border: 2px solid #3182ce;
+        border-radius: 12px;
+        background: linear-gradient(90deg, #e3f0ff 0%, #f9f9f9 100%);
+        width: 92%;
+        max-width: 850px;
+        box-shadow: 0 4px 18px rgba(49, 130, 206, 0.12);
+        font-family: "Inter", Arial, sans-serif;
+        font-size: 1.08rem;
+        color: #1a202c;
+        transition: box-shadow 0.2s, border-color 0.2s;
+      }
+      .review:hover {
+        box-shadow: 0 8px 32px rgba(49, 130, 206, 0.22);
+        border-color: #033297;
+        background: linear-gradient(90deg, #dbeafe 0%, #f0f4f8 100%);
+      }
+      .review b {
+        color: #2563eb;
+      }
     </style>
     <header>
       <h1>Research Papers</h1>
@@ -100,17 +100,16 @@
     </header>
     <div id="papers-list"></div>
     <script>
-
-    function validateEmail() {
-    let authorEmail = localStorage.getItem("authorEmail");
-    let reviewerEmail = localStorage.getItem("reviewerEmail");
-    if(!authorEmail && !reviewerEmail) {
-      alert("You are not logged in! Please login to view the papers.");
-      window.location.href = "/";
-      return;
-    }
-}
-    validateEmail();
+      function validateEmail() {
+        let authorEmail = localStorage.getItem("authorEmail");
+        let reviewerEmail = localStorage.getItem("reviewerEmail");
+        if (!authorEmail && !reviewerEmail) {
+          alert("You are not logged in! Please login to view the papers.");
+          window.location.href = "/";
+          return;
+        }
+      }
+      validateEmail();
 
       // Function to fetch and display papers
       async function fetchPapers() {
@@ -136,7 +135,8 @@
             abstract.innerHTML = `<B>Abstract:</B> ${paper.abstract}`;
 
             const downloadLink = document.createElement("a");
-            downloadLink.href = `http://localhost:3333/papers/${paper.filename}`;
+            // downloadLink.href = `http://localhost:3333/papers/${paper.filename}?download=true`;
+            downloadLink.href = `/papers/${paper.filename}`;
             downloadLink.setAttribute("download", paper.filename);
             const downloadButton = document.createElement("button");
             downloadButton.id = paper.paper_id;
@@ -160,9 +160,9 @@
             papersList.appendChild(listItem);
           });
 
-          // Assigning the papers to the reviewers 
+          // Assigning the papers to the reviewers
           let reviewerEmail = localStorage.getItem("reviewerEmail");
-          if(reviewerEmail) {
+          if (reviewerEmail) {
             let assignPapers = document.querySelectorAll(".cta-btn");
             assignPapers.forEach((ap) => {
               ap.addEventListener("click", async (event) => {
@@ -175,7 +175,10 @@
                       headers: {
                         "Content-Type": "application/json",
                       },
-                      body: JSON.stringify({ reviewer_email: reviewerEmail, paper_id: paper_id }),
+                      body: JSON.stringify({
+                        reviewer_email: reviewerEmail,
+                        paper_id: paper_id,
+                      }),
                     }
                   );
                   if (!response.ok) {
@@ -193,7 +196,7 @@
               });
             });
           }
-          
+
           // Getting the reviews for the papers
           let reviewButtons = document.querySelectorAll(".bta-btn");
           reviewButtons.forEach((rb) => {
@@ -211,7 +214,7 @@
 
                   event.target.style.display = "none";
 
-                  if(data.message === "No reviews yet!") {
+                  if (data.message === "No reviews yet!") {
                     let noReviewsDiv = document.createElement("div");
                     noReviewsDiv.classList.add("review");
                     noReviewsDiv.innerHTML = `<b>No reviews yet for this paper.</b>`;
@@ -220,7 +223,6 @@
                   }
 
                   data.message.forEach((review) => {
-
                     // Create a new div for each review
                     let reviewDiv = document.createElement("div");
                     reviewDiv.classList.add("review");

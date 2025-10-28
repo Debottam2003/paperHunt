@@ -19,7 +19,8 @@ const app = express();
 app.use(cors({
     origin: 'http://localhost:4000',
     method: 'GET, POST, PUT, DELETE, PATCH',
-    credentials: true
+    credentials: true,
+    // exposedHeaders: ["Content-Disposition"],
 }));
 
 // Setting the current filename and directry name
@@ -31,6 +32,11 @@ console.log(__dirname);
 // app.use(express.static(path.join(__dirname, 'public')));
 app.get('/papers/:filename', (req, res) => {
     const filePath = path.join(__dirname, 'public', 'papers', req.params.filename);
+    // res.setHeader('Content-Disposition', `atatchment; filename="${req.params.filename}"`);
+    // res.sendFile(filePath);
+    if (req.query.download !== "true") {
+        return res.sendFile(filePath);
+    }
     res.download(filePath); // <-- sets Content-Disposition: attachment
 });
 
