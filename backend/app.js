@@ -19,15 +19,20 @@ const app = express();
 app.use(cors({
     origin: 'http://localhost:4000',
     method: 'GET, POST, PUT, DELETE, PATCH',
+    credentials: true
 }));
 
 // Setting the current filename and directry name
 const __filename = fileURLToPath(import.meta.url);
 // console.log(import.meta);
-console.log(__filename);
+// console.log(__filename);
 const __dirname = path.dirname(__filename);
 console.log(__dirname);
 // app.use(express.static(path.join(__dirname, 'public')));
+app.get('/papers/:filename', (req, res) => {
+    const filePath = path.join(__dirname, 'public', 'papers', req.params.filename);
+    res.download(filePath); // <-- sets Content-Disposition: attachment
+});
 
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));

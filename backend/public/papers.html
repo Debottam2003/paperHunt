@@ -136,7 +136,7 @@
             abstract.innerHTML = `<B>Abstract:</B> ${paper.abstract}`;
 
             const downloadLink = document.createElement("a");
-            downloadLink.href = `/papers/${paper.filename}`;
+            downloadLink.href = `http://localhost:3333/papers/${paper.filename}`;
             downloadLink.setAttribute("download", paper.filename);
             const downloadButton = document.createElement("button");
             downloadButton.id = paper.paper_id;
